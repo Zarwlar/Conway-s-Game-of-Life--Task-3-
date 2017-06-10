@@ -3,7 +3,7 @@ const webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-    entry: ['./src/app.ts'],
+    entry: ['./src/app.js'],
     output: {
         path: './public',
         filename: 'app.js'
@@ -16,13 +16,17 @@ module.exports = {
                 exclude: [/node_modules/]
             },
             {
+                test: /\.styl$/,
+                use: ['style-loader', 'css-loader', 'stylus-loader']
+            },
+            {
                 test: /\.pug$/,
                 use: 'pug-loader'
             }
         ]
     },
     resolve: {
-        extensions: ['.ts', '.tsx', 'js']
+        extensions: ['.ts', '.tsx', '.js']
     },
     plugins: [new webpack.ProvidePlugin({
             $: 'jquery',

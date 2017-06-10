@@ -1,7 +1,7 @@
-import hello from '../src/app';
-import { expect } from 'chai';
+import Cell from '../src/Model/Cell'
 
-describe('Hello function', () => {
+
+describe('SetStateCell', () => {
   it('should return hello world', () => {
     const result = hello();
     expect(result).to.equal('Hello World!');
