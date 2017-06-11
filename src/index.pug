@@ -5,7 +5,12 @@ html(lang='ja')
     title Game of Life
     script(src='app.js')
   body
-    canvas.game__board
-    button.game__btn_play Старт
-    button.game__btn_pause Пауза
-    button.game__btn_clear Очистить
+  .game__board-container
+    canvas.game__board(width="990" height="500")
+    div.game__buttons
+      button.game__btn_play Старт
+      button.game__btn_pause Пауза
+      button.game__btn_clear Очистить
+    div.game__board-size-input
+      input.game__board-width(type='text', placeholder='Ширина')
+      input.game__board-height(type='text', placeholder='Высота')

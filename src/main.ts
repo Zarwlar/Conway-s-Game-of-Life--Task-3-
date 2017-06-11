@@ -1,14 +1,13 @@
 'use strict'
-// import Model from './Model/model'
-// import Controller from './Controller/controller'
+import Board from './Model/Board'
+import BoardController from './Controller/BoardController'
 import View from './View/View'
 
-class App {
+export default class App {
   constructor() {
-    //   var model = new Model();
-    //   var controller = new Controller(model);
-        var view = new View();
-    
+       var board = new Board({rows: 10, cols: 10});
+       var controller = new BoardController(board);
+       var view = new View(board, controller);
   }
 }
 
