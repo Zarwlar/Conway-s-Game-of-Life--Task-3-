@@ -20,11 +20,11 @@ export default class View {
 	constructor(Board: Board, BoardController: BoardController) {
 
 				this.board = Board;
-				this.playBtn = <HTMLButtonElement>$('.game__btn_play').get(0);
-				this.pauseBtn = <HTMLButtonElement>$('.game__btn_pause').get(0);
-				this.clearBtn = <HTMLButtonElement>$('.game__btn_clear').get(0);
-				this.widthInput = <HTMLInputElement>$('.game__board-width').get(0);
-				this.heightInput = <HTMLInputElement>$('.game__board-height').get(0);
+				this.playBtn = <HTMLButtonElement>$('.game__btn_play').get(0); 
+				this.pauseBtn = <HTMLButtonElement>$('.game__btn_pause').get(0); 
+				this.clearBtn = <HTMLButtonElement>$('.game__btn_clear').get(0); 
+				this.widthInput = <HTMLInputElement>$('.game__board-width').get(0); 
+				this.heightInput = <HTMLInputElement>$('.game__board-height').get(0); 
 
 
 				this.width = this.board.canvasBoard.offsetWidth;
@@ -56,7 +56,6 @@ export default class View {
 		this.ctx.clearRect(0, 0, this.width, this.height);
 		for (var i = 0; i < this.board.cols; i++) {
 			for (var j = 0; j < this.board.rows; j++) {
-				console.log(!!(this.board.getCellState(i,j)));
 				if (!!(this.board.getCellState(i,j))) {
 						this.ctx.fillRect(j * this.itemWidth, i * this.itemHeight, this.itemWidth, this.itemHeight);
 					}

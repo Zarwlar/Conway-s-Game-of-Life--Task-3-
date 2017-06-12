@@ -3,21 +3,26 @@ import * as $ from 'jquery'
 
 export default class Board {
 
-	private board: Array<Array<number>> = [];
+	private _board: Array<Array<number>> = [];
 	private nextGen: Array <any> = [];
 	public rows: number;
 	public cols: number;
 	public play: boolean;
 	public canvasBoard;
 
-	constructor(conf: any) {
-
+	constructor(conf?: any) {
+		conf = conf || {};
 		this.cols = conf.cols || 10;
 		this.rows = conf.rows || 10;
 
 		this.play = false;
 		this.canvasBoard = <HTMLCanvasElement>$('.game__board').get(0);
 		this.fillBoard(this.cols, this.rows);
+		console.log(this.board);
+	}
+
+	get board(){
+		return this._board;
 	}
 
 	private setCellState = (x: number, y: number, state: number) => {

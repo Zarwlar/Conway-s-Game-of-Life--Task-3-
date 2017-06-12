@@ -22,11 +22,19 @@ module.exports = {
             {
                 test: /\.pug$/,
                 use: 'pug-loader'
+            },
+            {
+                test: /\.js$/,
+                exclude: [/node_modules/,/app.js/],
+                use: [{
+                loader: 'babel-loader',
+                options: { presets: ['es2015'] },
+                }]
             }
         ]
     },
     resolve: {
-        extensions: ['.ts', '.tsx', '.js']
+        extensions: ['.ts', '.tsx']
     },
     plugins: [new webpack.ProvidePlugin({
             $: 'jquery',

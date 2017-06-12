@@ -5,7 +5,7 @@ import View from './View/View'
 
 export default class App {
   constructor() {
-       var board = new Board({rows: 10, cols: 10});
+       var board = new Board();
        var controller = new BoardController(board);
        var view = new View(board, controller);
   }
