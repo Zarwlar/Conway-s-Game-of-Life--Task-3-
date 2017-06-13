@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --compilers js:babel-core/register -r ./test/settings.js --compilers ts:ts-node/register -r ./test/\"*.spec.ts\"",
+    "test": "mocha \"test/settings.ts\" \"test/list/*.spec.ts\" -r ts-node/register",
     "dev": "webpack -d --watch",
     "prod": "webpack -p"
   },
@@ -17,6 +17,7 @@
   "devDependencies": {
     "@types/chai": "^4.0.0",
     "@types/chai-as-promised": "0.0.31",
+    "@types/jsdom": "^11.0.0",
     "@types/mocha": "^2.2.41",
     "@types/node": "^7.0.29",
     "babel-core": "^6.25.0",

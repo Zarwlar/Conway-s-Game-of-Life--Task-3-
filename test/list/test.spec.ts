@@ -1,7 +1,7 @@
-import Board from '../src/Model/Board'
-import BoardController from '../src/Controller/BoardController'
-import View from '../src/View/View'
-import App from '../src/main'
+import Board from '../../src/Model/Board'
+import BoardController from '../../src/Controller/BoardController'
+import View from '../../src/View/View'
+import App from '../../src/main'
 import { expect } from 'chai'
 import * as $ from 'jquery'
 
