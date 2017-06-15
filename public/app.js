@@ -10573,7 +10573,7 @@ exports = module.exports = __webpack_require__(6)(undefined);
 
 
 // module
-exports.push([module.i, ".game__board {\n  background: #ccc;\n  text-align: center;\n}\n.game__buttons {\n  text-align: center;\n}\n.game__board-container {\n  text-align: center;\n}\n.game__buttons > * {\n  margin: 0 1%;\n}\n.game__board-size-input > * {\n  display: block;\n  margin: 1% auto;\n  text-align: center;\n}\n", ""]);
+exports.push([module.i, ".game__board {\r\n\tbackground: #ccc;\r\n\ttext-align: center;\r\n}\r\n\r\n.game__buttons {\r\n\ttext-align: center;\r\n}\r\n\r\n.game__board-container {\r\n\ttext-align: center;\r\n}\r\n\r\n.game__buttons > * {\r\n\tmargin: 0 1%;\r\n}\r\n\r\n.game__board-size-input > * {\r\n\t\tdisplay: block;\r\n\t\tmargin: 1% auto;\r\n\t\ttext-align: center;\r\n}", ""]);
 
 // exports
 
@@ -10681,8 +10681,8 @@ if(content.locals) module.exports = content.locals;
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!../node_modules/css-loader/index.js!../node_modules/stylus-loader/index.js!./style.styl", function() {
-			var newContent = require("!!../node_modules/css-loader/index.js!../node_modules/stylus-loader/index.js!./style.styl");
+		module.hot.accept("!!../node_modules/css-loader/index.js!./style.css", function() {
+			var newContent = require("!!../node_modules/css-loader/index.js!./style.css");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
