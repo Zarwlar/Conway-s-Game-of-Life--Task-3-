@@ -5,7 +5,7 @@ import View from '../View/View'
 
 export default class BoardController {
 
-	private board: Board;
+	public board: Board;
 	public view: View;
 
 	constructor(Board: Board) {

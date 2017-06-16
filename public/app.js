@@ -10510,41 +10510,41 @@ exports.default = Board;
 Object.defineProperty(exports, "__esModule", { value: true });
 var $ = __webpack_require__(0);
 var View = (function () {
-    function View(Board, BoardController) {
+    function View(BoardController) {
         var _this = this;
         this.addEvent = function (elem, type, handler) {
             elem.addEventListener(type, handler, false);
         };
         this.draw = function () {
-            _this.itemWidth = _this.width / _this.board.rows;
-            _this.itemHeight = _this.height / _this.board.cols;
+            _this.itemWidth = _this.width / _this.controller.board.rows;
+            _this.itemHeight = _this.height / _this.controller.board.cols;
             _this.ctx.clearRect(0, 0, _this.width, _this.height);
-            for (var i = 0; i < _this.board.cols; i++) {
-                for (var j = 0; j < _this.board.rows; j++) {
-                    if (!!(_this.board.getCellState(i, j))) {
+            for (var i = 0; i < _this.controller.board.cols; i++) {
+                for (var j = 0; j < _this.controller.board.rows; j++) {
+                    if (!!(_this.controller.board.getCellState(i, j))) {
                         _this.ctx.fillRect(j * _this.itemWidth, i * _this.itemHeight, _this.itemWidth, _this.itemHeight);
                     }
                 }
             }
             return _this;
         };
-        this.board = Board;
+        this.controller = BoardController;
         this.playBtn = $('.game__btn_play').get(0);
         this.pauseBtn = $('.game__btn_pause').get(0);
         this.clearBtn = $('.game__btn_clear').get(0);
         this.widthInput = $('.game__board-width').get(0);
         this.heightInput = $('.game__board-height').get(0);
-        this.width = this.board.canvasBoard.offsetWidth;
-        this.height = this.board.canvasBoard.offsetHeight;
-        if (this.board.canvasBoard.getContext) {
-            this.ctx = this.board.canvasBoard.getContext('2d'),
+        this.width = BoardController.board.canvasBoard.offsetWidth;
+        this.height = BoardController.board.canvasBoard.offsetHeight;
+        if (BoardController.board.canvasBoard.getContext) {
+            this.ctx = BoardController.board.canvasBoard.getContext('2d'),
                 this.ctx.fillStyle = 'rgb(0,0,0)';
         }
         BoardController.view = this;
         this.addEvent(this.playBtn, 'click', BoardController.play);
         this.addEvent(this.pauseBtn, 'click', BoardController.pause);
         this.addEvent(this.clearBtn, 'click', BoardController.clear);
-        this.addEvent(this.board.canvasBoard, 'click', BoardController.clickHandler);
+        this.addEvent(BoardController.board.canvasBoard, 'click', BoardController.clickHandler);
         this.addEvent(this.widthInput, 'blur', BoardController.changeWidth);
         this.addEvent(this.heightInput, 'blur', BoardController.changeHeight);
         this.draw();
@@ -11159,7 +11159,7 @@ var App = (function () {
     function App() {
         var board = new Board_1.default();
         var controller = new BoardController_1.default(board);
-        var view = new View_1.default(board, controller);
+        var view = new View_1.default(controller);
     }
     return App;
 }());

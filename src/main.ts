@@ -7,7 +7,7 @@ export default class App {
   constructor() {
        var board = new Board();
        var controller = new BoardController(board);
-       var view = new View(board, controller);
+       var view = new View(controller);
   }
 }
 
