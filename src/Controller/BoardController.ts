@@ -8,8 +8,9 @@ export default class BoardController {
 	public board: Board;
 	public view: View;
 
-	constructor(Board: Board) {
-		this.board = Board;
+	constructor() {
+		this.board = new Board();
+		this.view = new View(this);
 	}
 
 	public pause = () => {

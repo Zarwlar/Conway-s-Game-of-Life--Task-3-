@@ -70,6 +70,159 @@
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var $ = __webpack_require__(2);
+var Board = (function () {
+    function Board(conf) {
+        var _this = this;
+        this._board = [];
+        this.nextGen = [];
+        this.setCellState = function (x, y, state) {
+            if (state !== 0 && state !== 1) {
+                state = 0;
+            }
+            _this.board[x][y] = state;
+            return _this;
+        };
+        this.getCellState = function (x, y) {
+            return _this.board[x][y];
+        };
+        this.toggleState = function (x, y) {
+            if (_this.board[x][y] === 0) {
+                _this.board[x][y] = 1;
+            }
+            else {
+                _this.board[x][y] = 0;
+            }
+            return _this.board[x][y];
+        };
+        this.checkState = function (x, y) {
+            var topRow = (y === 0) ? _this.rows - 1 : y - 1, bottomRow = (y === _this.rows - 1) ? 0 : y + 1, leftCol = (x === 0) ? _this.cols - 1 : x - 1, rightCol = (x === _this.cols - 1) ? 0 : x + 1, sum = 0, state = _this.board[x][y];
+            sum = _this.board[leftCol][topRow] + _this.board[x][topRow] + _this.board[rightCol][topRow] +
+                _this.board[leftCol][y] + _this.board[rightCol][y] +
+                _this.board[leftCol][bottomRow] + _this.board[x][bottomRow] + _this.board[rightCol][bottomRow];
+            if (state === 0 && sum === 3) {
+                state = 1;
+            }
+            else if (state === 1 && (sum < 2 || sum > 3)) {
+                state = 0;
+            }
+            return state;
+        };
+        this.cloneBoard = function (nextGen, board) {
+            for (var i = 0; i < _this.cols; i += 1) {
+                for (var j = 0; j < _this.rows; j += 1) {
+                    board[i][j] = nextGen[i][j];
+                }
+            }
+            return nextGen;
+        };
+        this.checkBoard = function () {
+            for (var i = 0; i < _this.cols; i += 1) {
+                for (var j = 0; j < _this.rows; j += 1) {
+                    _this.nextGen[i][j] = _this.checkState(i, j);
+                }
+            }
+            _this.cloneBoard(_this.nextGen, _this.board);
+            return _this;
+        };
+        this.clear = function () {
+            for (var i = 0; i < _this.cols; i += 1) {
+                for (var j = 0; j < _this.rows; j += 1) {
+                    _this.board[i][j] = 0;
+                }
+            }
+            return _this.board;
+        };
+        this.fillBoard = function (cols, rows) {
+            for (var i = 0; i < cols; i += 1) {
+                _this.board.push([]);
+                _this.nextGen.push([]);
+                for (var j = 0; j < rows; j += 1) {
+                    _this.board[i].push(0);
+                    _this.nextGen[i].push(0);
+                }
+            }
+        };
+        conf = conf || {};
+        this.cols = conf.cols || 10;
+        this.rows = conf.rows || 10;
+        this.play = false;
+        this.canvasBoard = $('.game__board').get(0);
+        this.fillBoard(this.cols, this.rows);
+        console.log(this.board);
+    }
+    Object.defineProperty(Board.prototype, "board", {
+        get: function () {
+            return this._board;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return Board;
+}());
+exports.default = Board;
+
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var $ = __webpack_require__(2);
+var View = (function () {
+    function View(BoardController) {
+        var _this = this;
+        this.addEvent = function (elem, type, handler) {
+            elem.addEventListener(type, handler, false);
+        };
+        this.draw = function () {
+            _this.itemWidth = _this.width / _this.controller.board.rows;
+            _this.itemHeight = _this.height / _this.controller.board.cols;
+            _this.ctx.clearRect(0, 0, _this.width, _this.height);
+            for (var i = 0; i < _this.controller.board.cols; i++) {
+                for (var j = 0; j < _this.controller.board.rows; j++) {
+                    if (!!(_this.controller.board.getCellState(i, j))) {
+                        _this.ctx.fillRect(j * _this.itemWidth, i * _this.itemHeight, _this.itemWidth, _this.itemHeight);
+                    }
+                }
+            }
+            return _this;
+        };
+        this.controller = BoardController;
+        this.playBtn = $('.game__btn_play').get(0);
+        this.pauseBtn = $('.game__btn_pause').get(0);
+        this.clearBtn = $('.game__btn_clear').get(0);
+        this.widthInput = $('.game__board-width').get(0);
+        this.heightInput = $('.game__board-height').get(0);
+        this.width = BoardController.board.canvasBoard.offsetWidth;
+        this.height = BoardController.board.canvasBoard.offsetHeight;
+        if (BoardController.board.canvasBoard.getContext) {
+            this.ctx = BoardController.board.canvasBoard.getContext('2d'),
+                this.ctx.fillStyle = 'rgb(0,0,0)';
+        }
+        BoardController.view = this;
+        this.addEvent(this.playBtn, 'click', BoardController.play);
+        this.addEvent(this.pauseBtn, 'click', BoardController.pause);
+        this.addEvent(this.clearBtn, 'click', BoardController.clear);
+        this.addEvent(BoardController.board.canvasBoard, 'click', BoardController.clickHandler);
+        this.addEvent(this.widthInput, 'blur', BoardController.changeWidth);
+        this.addEvent(this.heightInput, 'blur', BoardController.changeHeight);
+        this.draw();
+    }
+    return View;
+}());
+exports.default = View;
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
  * jQuery JavaScript Library v3.2.1
  * https://jquery.com/
@@ -10327,14 +10480,16 @@ return jQuery;
 
 
 /***/ }),
-/* 1 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var Board_1 = __webpack_require__(0);
+var View_1 = __webpack_require__(1);
 var BoardController = (function () {
-    function BoardController(Board) {
+    function BoardController() {
         var _this = this;
         this.pause = function () {
             _this.board.play = false;
@@ -10394,164 +10549,12 @@ var BoardController = (function () {
             }
             return [x, y];
         };
-        this.board = Board;
+        this.board = new Board_1.default();
+        this.view = new View_1.default(this);
     }
     return BoardController;
 }());
 exports.default = BoardController;
-
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var $ = __webpack_require__(0);
-var Board = (function () {
-    function Board(conf) {
-        var _this = this;
-        this._board = [];
-        this.nextGen = [];
-        this.setCellState = function (x, y, state) {
-            if (state !== 0 && state !== 1) {
-                state = 0;
-            }
-            _this.board[x][y] = state;
-            return _this;
-        };
-        this.getCellState = function (x, y) {
-            return _this.board[x][y];
-        };
-        this.toggleState = function (x, y) {
-            if (_this.board[x][y] === 0) {
-                _this.board[x][y] = 1;
-            }
-            else {
-                _this.board[x][y] = 0;
-            }
-            return _this.board[x][y];
-        };
-        this.checkState = function (x, y) {
-            var topRow = (y === 0) ? _this.rows - 1 : y - 1, bottomRow = (y === _this.rows - 1) ? 0 : y + 1, leftCol = (x === 0) ? _this.cols - 1 : x - 1, rightCol = (x === _this.cols - 1) ? 0 : x + 1, sum = 0, state = _this.board[x][y];
-            sum = _this.board[leftCol][topRow] + _this.board[x][topRow] + _this.board[rightCol][topRow] +
-                _this.board[leftCol][y] + _this.board[rightCol][y] +
-                _this.board[leftCol][bottomRow] + _this.board[x][bottomRow] + _this.board[rightCol][bottomRow];
-            if (state === 0 && sum === 3) {
-                state = 1;
-            }
-            else if (state === 1 && (sum < 2 || sum > 3)) {
-                state = 0;
-            }
-            return state;
-        };
-        this.cloneBoard = function (nextGen, board) {
-            for (var i = 0; i < _this.cols; i += 1) {
-                for (var j = 0; j < _this.rows; j += 1) {
-                    board[i][j] = nextGen[i][j];
-                }
-            }
-            return nextGen;
-        };
-        this.checkBoard = function () {
-            for (var i = 0; i < _this.cols; i += 1) {
-                for (var j = 0; j < _this.rows; j += 1) {
-                    _this.nextGen[i][j] = _this.checkState(i, j);
-                }
-            }
-            _this.cloneBoard(_this.nextGen, _this.board);
-            return _this;
-        };
-        this.clear = function () {
-            for (var i = 0; i < _this.cols; i += 1) {
-                for (var j = 0; j < _this.rows; j += 1) {
-                    _this.board[i][j] = 0;
-                }
-            }
-            return _this.board;
-        };
-        this.fillBoard = function (cols, rows) {
-            for (var i = 0; i < cols; i += 1) {
-                _this.board.push([]);
-                _this.nextGen.push([]);
-                for (var j = 0; j < rows; j += 1) {
-                    _this.board[i].push(0);
-                    _this.nextGen[i].push(0);
-                }
-            }
-        };
-        conf = conf || {};
-        this.cols = conf.cols || 10;
-        this.rows = conf.rows || 10;
-        this.play = false;
-        this.canvasBoard = $('.game__board').get(0);
-        this.fillBoard(this.cols, this.rows);
-        console.log(this.board);
-    }
-    Object.defineProperty(Board.prototype, "board", {
-        get: function () {
-            return this._board;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    return Board;
-}());
-exports.default = Board;
-
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var $ = __webpack_require__(0);
-var View = (function () {
-    function View(BoardController) {
-        var _this = this;
-        this.addEvent = function (elem, type, handler) {
-            elem.addEventListener(type, handler, false);
-        };
-        this.draw = function () {
-            _this.itemWidth = _this.width / _this.controller.board.rows;
-            _this.itemHeight = _this.height / _this.controller.board.cols;
-            _this.ctx.clearRect(0, 0, _this.width, _this.height);
-            for (var i = 0; i < _this.controller.board.cols; i++) {
-                for (var j = 0; j < _this.controller.board.rows; j++) {
-                    if (!!(_this.controller.board.getCellState(i, j))) {
-                        _this.ctx.fillRect(j * _this.itemWidth, i * _this.itemHeight, _this.itemWidth, _this.itemHeight);
-                    }
-                }
-            }
-            return _this;
-        };
-        this.controller = BoardController;
-        this.playBtn = $('.game__btn_play').get(0);
-        this.pauseBtn = $('.game__btn_pause').get(0);
-        this.clearBtn = $('.game__btn_clear').get(0);
-        this.widthInput = $('.game__board-width').get(0);
-        this.heightInput = $('.game__board-height').get(0);
-        this.width = BoardController.board.canvasBoard.offsetWidth;
-        this.height = BoardController.board.canvasBoard.offsetHeight;
-        if (BoardController.board.canvasBoard.getContext) {
-            this.ctx = BoardController.board.canvasBoard.getContext('2d'),
-                this.ctx.fillStyle = 'rgb(0,0,0)';
-        }
-        BoardController.view = this;
-        this.addEvent(this.playBtn, 'click', BoardController.play);
-        this.addEvent(this.pauseBtn, 'click', BoardController.pause);
-        this.addEvent(this.clearBtn, 'click', BoardController.clear);
-        this.addEvent(BoardController.board.canvasBoard, 'click', BoardController.clickHandler);
-        this.addEvent(this.widthInput, 'blur', BoardController.changeWidth);
-        this.addEvent(this.heightInput, 'blur', BoardController.changeHeight);
-        this.draw();
-    }
-    return View;
-}());
-exports.default = View;
 
 
 /***/ }),
@@ -11152,13 +11155,13 @@ module.exports = function (css) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Board_1 = __webpack_require__(2);
-var BoardController_1 = __webpack_require__(1);
-var View_1 = __webpack_require__(3);
+var Board_1 = __webpack_require__(0);
+var BoardController_1 = __webpack_require__(3);
+var View_1 = __webpack_require__(1);
 var App = (function () {
     function App() {
         var board = new Board_1.default();
-        var controller = new BoardController_1.default(board);
+        var controller = new BoardController_1.default();
         var view = new View_1.default(controller);
     }
     return App;
@@ -11174,9 +11177,9 @@ window.onload = function () {
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./Controller/BoardController.ts": 1,
-	"./Model/Board.ts": 2,
-	"./View/View.ts": 3,
+	"./Controller/BoardController.ts": 3,
+	"./Model/Board.ts": 0,
+	"./View/View.ts": 1,
 	"./main.ts": 10
 };
 function webpackContext(req) {

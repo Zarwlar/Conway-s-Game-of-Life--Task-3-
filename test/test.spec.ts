@@ -34,7 +34,7 @@ describe('Board Action', () => {
 
 	  it('Обработка клика по клетке', () => {
 		const board = new Board();
-		const controller = new BoardController(board);
+		const controller = new BoardController();
 		const view = new View(controller);
 
 		expect([[0,0,0,0,0,0,0,0,0,0],
