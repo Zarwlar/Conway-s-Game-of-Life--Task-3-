@@ -73,107 +73,7 @@
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var $ = __webpack_require__(2);
-var Board = (function () {
-    function Board(conf) {
-        var _this = this;
-        this._board = [];
-        this.nextGen = [];
-        this.setCellState = function (x, y, state) {
-            if (state !== 0 && state !== 1) {
-                state = 0;
-            }
-            _this.board[x][y] = state;
-            return _this;
-        };
-        this.getCellState = function (x, y) {
-            return _this.board[x][y];
-        };
-        this.toggleState = function (x, y) {
-            if (_this.board[x][y] === 0) {
-                _this.board[x][y] = 1;
-            }
-            else {
-                _this.board[x][y] = 0;
-            }
-            return _this.board[x][y];
-        };
-        this.checkState = function (x, y) {
-            var topRow = (y === 0) ? _this.rows - 1 : y - 1, bottomRow = (y === _this.rows - 1) ? 0 : y + 1, leftCol = (x === 0) ? _this.cols - 1 : x - 1, rightCol = (x === _this.cols - 1) ? 0 : x + 1, sum = 0, state = _this.board[x][y];
-            sum = _this.board[leftCol][topRow] + _this.board[x][topRow] + _this.board[rightCol][topRow] +
-                _this.board[leftCol][y] + _this.board[rightCol][y] +
-                _this.board[leftCol][bottomRow] + _this.board[x][bottomRow] + _this.board[rightCol][bottomRow];
-            if (state === 0 && sum === 3) {
-                state = 1;
-            }
-            else if (state === 1 && (sum < 2 || sum > 3)) {
-                state = 0;
-            }
-            return state;
-        };
-        this.cloneBoard = function (nextGen, board) {
-            for (var i = 0; i < _this.cols; i += 1) {
-                for (var j = 0; j < _this.rows; j += 1) {
-                    board[i][j] = nextGen[i][j];
-                }
-            }
-            return nextGen;
-        };
-        this.checkBoard = function () {
-            for (var i = 0; i < _this.cols; i += 1) {
-                for (var j = 0; j < _this.rows; j += 1) {
-                    _this.nextGen[i][j] = _this.checkState(i, j);
-                }
-            }
-            _this.cloneBoard(_this.nextGen, _this.board);
-            return _this;
-        };
-        this.clear = function () {
-            for (var i = 0; i < _this.cols; i += 1) {
-                for (var j = 0; j < _this.rows; j += 1) {
-                    _this.board[i][j] = 0;
-                }
-            }
-            return _this.board;
-        };
-        this.fillBoard = function (cols, rows) {
-            for (var i = 0; i < cols; i += 1) {
-                _this.board.push([]);
-                _this.nextGen.push([]);
-                for (var j = 0; j < rows; j += 1) {
-                    _this.board[i].push(0);
-                    _this.nextGen[i].push(0);
-                }
-            }
-        };
-        conf = conf || {};
-        this.cols = conf.cols || 10;
-        this.rows = conf.rows || 10;
-        this.play = false;
-        this.canvasBoard = $('.game__board').get(0);
-        this.fillBoard(this.cols, this.rows);
-        console.log(this.board);
-    }
-    Object.defineProperty(Board.prototype, "board", {
-        get: function () {
-            return this._board;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    return Board;
-}());
-exports.default = Board;
-
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var $ = __webpack_require__(2);
+var $ = __webpack_require__(1);
 var View = (function () {
     function View(BoardController) {
         var _this = this;
@@ -220,7 +120,7 @@ exports.default = View;
 
 
 /***/ }),
-/* 2 */
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -10480,14 +10380,14 @@ return jQuery;
 
 
 /***/ }),
-/* 3 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Board_1 = __webpack_require__(0);
-var View_1 = __webpack_require__(1);
+var Board_1 = __webpack_require__(3);
+var View_1 = __webpack_require__(0);
 var BoardController = (function () {
     function BoardController() {
         var _this = this;
@@ -10555,6 +10455,116 @@ var BoardController = (function () {
     return BoardController;
 }());
 exports.default = BoardController;
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var $ = __webpack_require__(1);
+var Board = (function () {
+    function Board(conf) {
+        var _this = this;
+        this._board = [];
+        this.nextGen = [];
+        // private preset = () => {
+        // }
+        this.setCellState = function (x, y, state) {
+            if (state !== 0 && state !== 1) {
+                state = 0;
+            }
+            _this.board[x][y] = state;
+            return _this;
+        };
+        this.getCellState = function (x, y) {
+            return _this.board[x][y];
+        };
+        this.toggleState = function (x, y) {
+            if (_this.board[x][y] === 0) {
+                _this.board[x][y] = 1;
+            }
+            else {
+                _this.board[x][y] = 0;
+            }
+            return _this.board[x][y];
+        };
+        this.checkState = function (x, y) {
+            var topRow = (y === 0) ? _this.rows - 1 : y - 1, bottomRow = (y === _this.rows - 1) ? 0 : y + 1, leftCol = (x === 0) ? _this.cols - 1 : x - 1, rightCol = (x === _this.cols - 1) ? 0 : x + 1, sum = 0, state = _this.board[x][y];
+            sum = _this.board[leftCol][topRow] + _this.board[x][topRow] + _this.board[rightCol][topRow] +
+                _this.board[leftCol][y] + _this.board[rightCol][y] +
+                _this.board[leftCol][bottomRow] + _this.board[x][bottomRow] + _this.board[rightCol][bottomRow];
+            if (state === 0 && sum === 3) {
+                state = 1;
+            }
+            else if (state === 1 && (sum < 2 || sum > 3)) {
+                state = 0;
+            }
+            return state;
+        };
+        this.cloneBoard = function (nextGen, board) {
+            for (var i = 0; i < _this.cols; i += 1) {
+                for (var j = 0; j < _this.rows; j += 1) {
+                    board[i][j] = nextGen[i][j];
+                }
+            }
+            return nextGen;
+        };
+        this.GetNextGen = function () {
+            for (var i = 0; i < _this.cols; i += 1) {
+                for (var j = 0; j < _this.rows; j += 1) {
+                    _this.nextGen[i][j] = _this.checkState(i, j);
+                }
+            }
+            return _this.nextGen;
+        };
+        this.checkBoard = function () {
+            for (var i = 0; i < _this.cols; i += 1) {
+                for (var j = 0; j < _this.rows; j += 1) {
+                    _this.nextGen[i][j] = _this.checkState(i, j);
+                }
+            }
+            _this.cloneBoard(_this.nextGen, _this.board);
+            return _this;
+        };
+        this.clear = function () {
+            for (var i = 0; i < _this.cols; i += 1) {
+                for (var j = 0; j < _this.rows; j += 1) {
+                    _this.board[i][j] = 0;
+                }
+            }
+            return _this.board;
+        };
+        this.fillBoard = function (cols, rows) {
+            for (var i = 0; i < cols; i += 1) {
+                _this.board.push([]);
+                _this.nextGen.push([]);
+                for (var j = 0; j < rows; j += 1) {
+                    _this.board[i].push(0);
+                    _this.nextGen[i].push(0);
+                }
+            }
+        };
+        conf = conf || {};
+        this.cols = conf.cols || 10;
+        this.rows = conf.rows || 10;
+        this.play = false;
+        this.canvasBoard = $('.game__board').get(0);
+        document.getElementsByClassName;
+        this.fillBoard(this.cols, this.rows);
+    }
+    Object.defineProperty(Board.prototype, "board", {
+        get: function () {
+            return this._board;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return Board;
+}());
+exports.default = Board;
 
 
 /***/ }),
@@ -11155,12 +11165,10 @@ module.exports = function (css) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Board_1 = __webpack_require__(0);
-var BoardController_1 = __webpack_require__(3);
-var View_1 = __webpack_require__(1);
+var BoardController_1 = __webpack_require__(2);
+var View_1 = __webpack_require__(0);
 var App = (function () {
     function App() {
-        var board = new Board_1.default();
         var controller = new BoardController_1.default();
         var view = new View_1.default(controller);
     }
@@ -11177,9 +11185,9 @@ window.onload = function () {
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./Controller/BoardController.ts": 3,
-	"./Model/Board.ts": 0,
-	"./View/View.ts": 1,
+	"./Controller/BoardController.ts": 2,
+	"./Model/Board.ts": 3,
+	"./View/View.ts": 0,
 	"./main.ts": 10
 };
 function webpackContext(req) {

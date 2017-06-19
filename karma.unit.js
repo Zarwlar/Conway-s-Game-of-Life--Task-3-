@@ -1,5 +1,6 @@
 var webpackConfig = require('./webpack.config');
 
+
 module.exports = function (config) {
   config.set({
     basePath: '',
@@ -12,7 +13,7 @@ module.exports = function (config) {
     ],
     preprocessors: {
       'test/**/*.ts': ['webpack'],
-      'src/index.pug': ['pug', 'html2js'],
+      'src/index.pug': ['pug', 'html2js']
     },
     webpack: {
       module: webpackConfig.module,

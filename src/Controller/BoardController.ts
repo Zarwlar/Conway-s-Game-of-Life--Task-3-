@@ -11,13 +11,16 @@ export default class BoardController {
 	constructor() {
 		this.board = new Board();
 		this.view = new View(this);
+
 	}
 
 	public pause = () => {
 		this.board.play = false;
 		this.view.pauseBtn.setAttribute('disabled','disabled');
 		this.view.playBtn.removeAttribute('disabled');
+
 		return this;
+
 	}
 
 	public changeWidth = (event) => {
@@ -27,6 +30,7 @@ export default class BoardController {
 		this.board.rows = event.currentTarget.value;
 		this.board.fillBoard(this.board.cols, this.board.rows);
 		this.view.draw();
+
 	}
 
 	public changeHeight = (event) => {
@@ -36,6 +40,7 @@ export default class BoardController {
 		this.board.cols = event.currentTarget.value;
 		this.board.fillBoard(this.board.cols, this.board.rows);
 		this.view.draw();
+
 	}
 
 	public clear = () => {
@@ -47,6 +52,7 @@ export default class BoardController {
 	}
 
 	public animation = () => {
+
 		var __this = this;
 		(function animationLoop() {
 			if (!__this.board.play) {
@@ -61,6 +67,7 @@ export default class BoardController {
 	}
 
 	public play = () => {
+
 		if (this.board.play) return false;
 		this.board.play = true;
 		this.animation();
@@ -70,6 +77,7 @@ export default class BoardController {
 	}
 
 	public clickHandler = (event) => {
+
 		var event = event || window.event,
 			x = (event.offsetY / this.view.itemHeight) | 0,
 			y = (event.offsetX / this.view.itemWidth) | 0;

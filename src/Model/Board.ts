@@ -17,13 +17,17 @@ export default class Board {
 
 		this.play = false;
 		this.canvasBoard = <HTMLCanvasElement>$('.game__board').get(0);
+		document.getElementsByClassName
 		this.fillBoard(this.cols, this.rows);
-		console.log(this.board);
 	}
 
 	get board(){
 		return this._board;
 	}
+
+	// private preset = () => {
+		
+	// }
 
 	private setCellState = (x: number, y: number, state: number) => {
 		if (state !== 0 && state !== 1) {
@@ -75,6 +79,15 @@ export default class Board {
 			}
 		}
 		return nextGen;
+	}
+
+	public GetNextGen = () => {
+		for (var i = 0; i < this.cols; i += 1) {
+			for (var j = 0; j < this.rows; j += 1) {
+				this.nextGen[i][j] = this.checkState(i, j);
+			}
+		}
+		return this.nextGen;
 	}
 
 	public checkBoard = () => {
