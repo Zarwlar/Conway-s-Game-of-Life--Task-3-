@@ -1,7 +1,6 @@
 import Board from '../src/Model/Board'
 import BoardController from '../src/Controller/BoardController'
 import View from '../src/View/View'
-import App from '../src/main'
 import * as $ from 'jquery'
 import { expect } from 'chai';
 
@@ -67,7 +66,6 @@ describe('Board Action', () => {
 
 		const controller = new BoardController();
 		const view = new View(controller);
-
 		const canvas = document.getElementsByClassName('game__board')[0];
 
 		function click(el) {
@@ -103,23 +101,22 @@ describe('Board Action', () => {
 
 		const controller = new BoardController();
 		const view = new View(controller);
+		controller.board.preset([
+			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			[0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+			[0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+			[0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+		]);
 
-		const canvas = document.getElementsByClassName('game__board')[0];
+		console.log(controller.board.board, 'Первый');
+		console.log(controller.board.getNextGen(), 'Второй');
 
-		function click(el) {
-			var ev = document.createEvent("MouseEvent");
-			ev.initMouseEvent(
-				"click",
-				true, true,
-				window, null,
-				25, 133, 27, 135,
-				false, false, false, false,
-				0, null
-			);
-			el.dispatchEvent(ev);
-		}
-
-		click(canvas);
 
 		expect([
 			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],

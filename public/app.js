@@ -10470,8 +10470,16 @@ var Board = (function () {
         var _this = this;
         this._board = [];
         this.nextGen = [];
-        // private preset = () => {
-        // }
+        this.preset = function (preset) {
+            for (var i = 0, c = preset.length; i < c; i += 1) {
+                for (var j = 0, r = preset[i].length; j < r; j += 1) {
+                    if ((preset[i][j] != undefined) && (_this.board[i][j] != undefined) && (_this.board[i][j] === 0 || _this.board[i][j] === 1)) {
+                        _this.board[i][j] = preset[i][j];
+                    }
+                }
+            }
+            return _this;
+        };
         this.setCellState = function (x, y, state) {
             if (state !== 0 && state !== 1) {
                 state = 0;

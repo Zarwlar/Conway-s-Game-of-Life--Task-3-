@@ -25,10 +25,17 @@ export default class Board {
 		return this._board;
 	}
 
-	// private preset = () => {
-		
-	// }
+	public preset = (preset: Array<Array<number>>) => {
+		for(var i=0, c = preset.length; i < c; i+=1) {
+			for(var j=0, r = preset[i].length; j < r; j+=1) {
+				if( (preset[i][j] != undefined) && (this.board[i][j] != undefined) && (this.board[i][j] === 0 || this.board[i][j] === 1)) {
+					this.board[i][j] = preset[i][j];
+				}
+			}
+		}
 
+		return this;
+	};
 	private setCellState = (x: number, y: number, state: number) => {
 		if (state !== 0 && state !== 1) {
 			state = 0;
@@ -81,7 +88,7 @@ export default class Board {
 		return nextGen;
 	}
 
-	public GetNextGen = () => {
+	public getNextGen = () => {
 		for (var i = 0; i < this.cols; i += 1) {
 			for (var j = 0; j < this.rows; j += 1) {
 				this.nextGen[i][j] = this.checkState(i, j);
@@ -91,11 +98,7 @@ export default class Board {
 	}
 
 	public checkBoard = () => {
-		for (var i = 0; i < this.cols; i += 1) {
-			for (var j = 0; j < this.rows; j += 1) {
-				this.nextGen[i][j] = this.checkState(i, j);
-			}
-		}
+		this.getNextGen();
 		this.cloneBoard(this.nextGen, this.board);
 
 		return this;
