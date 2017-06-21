@@ -10398,6 +10398,7 @@ var BoardController = (function () {
             return _this;
         };
         this.changeWidth = function (event) {
+            console.log('Про меня вспомнили!');
             if (_this.board.rows === event.currentTarget.value || event.currentTarget.value < 4 || isNaN(event.currentTarget.value)) {
                 return;
             }
@@ -10520,7 +10521,7 @@ var Board = (function () {
             }
             return nextGen;
         };
-        this.GetNextGen = function () {
+        this.getNextGen = function () {
             for (var i = 0; i < _this.cols; i += 1) {
                 for (var j = 0; j < _this.rows; j += 1) {
                     _this.nextGen[i][j] = _this.checkState(i, j);
@@ -10529,11 +10530,7 @@ var Board = (function () {
             return _this.nextGen;
         };
         this.checkBoard = function () {
-            for (var i = 0; i < _this.cols; i += 1) {
-                for (var j = 0; j < _this.rows; j += 1) {
-                    _this.nextGen[i][j] = _this.checkState(i, j);
-                }
-            }
+            _this.getNextGen();
             _this.cloneBoard(_this.nextGen, _this.board);
             return _this;
         };
@@ -10546,9 +10543,16 @@ var Board = (function () {
             return _this.board;
         };
         this.fillBoard = function (cols, rows) {
+            console.log(_this.board, 'Перед заполнением');
             for (var i = 0; i < cols; i += 1) {
-                _this.board.push([]);
-                _this.nextGen.push([]);
+                if (_this.board.length > cols) {
+                    _this.board.push([]);
+                    _this.nextGen.push([]);
+                }
+                else {
+                    _this.board.shift();
+                    _this.nextGen.shift();
+                }
                 for (var j = 0; j < rows; j += 1) {
                     _this.board[i].push(0);
                     _this.nextGen[i].push(0);
