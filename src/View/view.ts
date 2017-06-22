@@ -60,7 +60,7 @@ export default class View {
 						this.ctx.fillRect(j * this.itemWidth, i * this.itemHeight, this.itemWidth, this.itemHeight);
 					}
 				}
-			}
+		}
 			return this;
 		}
 

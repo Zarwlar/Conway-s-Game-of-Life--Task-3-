@@ -2,34 +2,35 @@ import Board from '../src/Model/Board'
 import BoardController from '../src/Controller/BoardController'
 import View from '../src/View/View'
 import * as $ from 'jquery'
-import { expect } from 'chai';
-import { simulant } from 'simulant';
+import {
+	expect
+} from 'chai';
 
 describe('Board Action', () => {
 
 
-		beforeEach(() => {
-			const canvas = document.createElement('canvas');
-			canvas.classList.add('game__board');
-			canvas.setAttribute('width', '990');
-			canvas.setAttribute('height', '500');
-			document.body.appendChild(canvas);
+	beforeEach(() => {
+		const canvas = document.createElement('canvas');
+		canvas.classList.add('game__board');
+		canvas.setAttribute('width', '990');
+		canvas.setAttribute('height', '500');
+		document.body.appendChild(canvas);
 
-			const buttons = ['game__btn_play', 'game__btn_pause', 'game__btn_clear'];
-			buttons.forEach((name) => {
-				const elem = document.createElement('button');
-				elem.classList.add(name);
-				document.body.appendChild(elem);
-			});
-
-			const inputs = ['game__board-width', 'game__board-height'];
-			inputs.forEach((name) => {
-				const elem = document.createElement('input');
-				elem.classList.add(name);
-				document.body.appendChild(elem);
-			});
+		const buttons = ['game__btn_play', 'game__btn_pause', 'game__btn_clear'];
+		buttons.forEach((name) => {
+			const elem = document.createElement('button');
+			elem.classList.add(name);
+			document.body.appendChild(elem);
 		});
-	
+
+		const inputs = ['game__board-width', 'game__board-height'];
+		inputs.forEach((name) => {
+			const elem = document.createElement('input');
+			elem.classList.add(name);
+			document.body.appendChild(elem);
+		});
+	});
+
 
 
 	it('Обработка клика по клетке', () => {
@@ -106,27 +107,43 @@ describe('Board Action', () => {
 		const controller = new BoardController();
 		const view = new View(controller);
 
-		// $('game__board-width').value = '3';
+		const input_width = $('.game__board-width');
+		input_width.trigger('focus');
+		input_width.val('5')
+		input_width.trigger('blur');
 
-		// let ev = document.createEvent('FocusEvent');
-		// ev.initFocusEvent('blur', false, false, window, null, null);
-		// let el = document.getElementsByClassName('game__board-width')[0];
-		// let g = <HTMLInputElement>document.getElementsByClassName('game__board-width')[0];
-		// let event_focus = new simulant('focus');
-		// g.value = '3';
-		// let event_blur = new simulant('blur');
-		// console.log(g);
-		// simulant.fire(g, event_focus)
-
-		const canvas = $('.game__board-width');
-		canvas.trigger('focus');
-		console.log(controller.board.board);
-		canvas.val('3')
-		canvas.trigger('blur');
-		console.log(controller.board.board);
+		expect([
+			[0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0]
+		]).to.deep.equal(controller.board.board);
+	});
 
 
-		expect(2+2).to.equal(4);
+	it('Изменение высоты по unfocus', () => {
+
+		const controller = new BoardController();
+		const view = new View(controller);
+
+		const input_height = $('.game__board-height');
+		input_height.trigger('focus');
+		input_height.val('5')
+		input_height.trigger('blur');
+
+		expect([
+			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+		]).to.deep.equal(controller.board.board);
 	});
 
 	afterEach(() => {

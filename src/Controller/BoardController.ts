@@ -28,7 +28,7 @@ export default class BoardController {
 			return;
 		}
 		this.board.rows = event.currentTarget.value;
-	  this.board.fillBoard(this.board.cols, this.board.rows);
+	  this.board.changeSize(this.board.cols, this.board.rows);
 		this.view.draw();
 
 	}
@@ -38,7 +38,7 @@ export default class BoardController {
 			return;
 		}
 		this.board.cols = event.currentTarget.value;
-		this.board.fillBoard(this.board.cols, this.board.rows);
+		this.board.changeSize(this.board.cols, this.board.rows);
 		this.view.draw();
 
 	}

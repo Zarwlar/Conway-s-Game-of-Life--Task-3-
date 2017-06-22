@@ -113,19 +113,33 @@ export default class Board {
 		return this.board;
 	}
 
-	public fillBoard = (cols, rows) => {
-		console.log(this.board, 'Перед заполнением');
+	public changeSize = (cols, rows) => {
+		let tmp = this.board;
+		this._board = [];
 		for (var i = 0; i < cols; i += 1) {
-			if (this.board.length > cols) {
-				this.board.push([]);
-				this.nextGen.push([]);
-			} else {
-				this.board.shift();
-				this.nextGen.shift();
-			}
+			this.board.push([]);
+			this.nextGen.push([]);
 			for (var j = 0; j < rows; j += 1) {
+				try {
+					this.board[i].push(tmp[i][j]);
+					this.nextGen[i].push(tmp[i][j]);
+				} catch (e) {
 					this.board[i].push(0);
 					this.nextGen[i].push(0);
+				}
+			}
+		}
+		tmp = [];
+		return this.board;
+	}
+
+	public fillBoard = (cols, rows) => {
+		for (var i = 0; i < cols; i += 1) {
+			this.board.push([]);
+			this.nextGen.push([]);
+			for (var j = 0; j < rows; j += 1) {
+				this.board[i].push(0);
+				this.nextGen[i].push(0);
 			}
 		}
 	}

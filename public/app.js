@@ -91,6 +91,7 @@ var View = (function () {
                     }
                 }
             }
+            console.log(_this.controller.board.board);
             return _this;
         };
         this.controller = BoardController;
@@ -10398,12 +10399,11 @@ var BoardController = (function () {
             return _this;
         };
         this.changeWidth = function (event) {
-            console.log('Про меня вспомнили!');
             if (_this.board.rows === event.currentTarget.value || event.currentTarget.value < 4 || isNaN(event.currentTarget.value)) {
                 return;
             }
             _this.board.rows = event.currentTarget.value;
-            _this.board.fillBoard(_this.board.cols, _this.board.rows);
+            _this.board.changeSize(_this.board.cols, _this.board.rows);
             _this.view.draw();
         };
         this.changeHeight = function (event) {
@@ -10411,7 +10411,7 @@ var BoardController = (function () {
                 return;
             }
             _this.board.cols = event.currentTarget.value;
-            _this.board.fillBoard(_this.board.cols, _this.board.rows);
+            _this.board.changeSize(_this.board.cols, _this.board.rows);
             _this.view.draw();
         };
         this.clear = function () {
@@ -10542,17 +10542,30 @@ var Board = (function () {
             }
             return _this.board;
         };
-        this.fillBoard = function (cols, rows) {
-            console.log(_this.board, 'Перед заполнением');
+        this.changeSize = function (cols, rows) {
+            var tmp = _this.board;
+            _this._board = [];
             for (var i = 0; i < cols; i += 1) {
-                if (_this.board.length > cols) {
-                    _this.board.push([]);
-                    _this.nextGen.push([]);
+                _this.board.push([]);
+                _this.nextGen.push([]);
+                for (var j = 0; j < rows; j += 1) {
+                    try {
+                        _this.board[i].push(tmp[i][j]);
+                        _this.nextGen[i].push(tmp[i][j]);
+                    }
+                    catch (e) {
+                        _this.board[i].push(0);
+                        _this.nextGen[i].push(0);
+                    }
                 }
-                else {
-                    _this.board.shift();
-                    _this.nextGen.shift();
-                }
+            }
+            tmp = [];
+            return _this.board;
+        };
+        this.fillBoard = function (cols, rows) {
+            for (var i = 0; i < cols; i += 1) {
+                _this.board.push([]);
+                _this.nextGen.push([]);
                 for (var j = 0; j < rows; j += 1) {
                     _this.board[i].push(0);
                     _this.nextGen[i].push(0);
