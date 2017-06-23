@@ -36,7 +36,6 @@ describe('Board Action', () => {
 	it('Обработка клика по клетке', () => {
 
 		const controller = new BoardController();
-		const view = new View(controller);
 		const canvas = document.getElementsByClassName('game__board')[0];
 
 		function click(el) {
@@ -72,7 +71,7 @@ describe('Board Action', () => {
 	it('Получение следующего поколения', () => {
 
 		const controller = new BoardController();
-		const view = new View(controller);
+
 		const preset = [
 			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 			[0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -105,7 +104,6 @@ describe('Board Action', () => {
 	it('Изменение ширины по unfocus', () => {
 
 		const controller = new BoardController();
-		const view = new View(controller);
 
 		const input_width = $('.game__board-width');
 		input_width.trigger('focus');
@@ -130,7 +128,6 @@ describe('Board Action', () => {
 	it('Изменение высоты по unfocus', () => {
 
 		const controller = new BoardController();
-		const view = new View(controller);
 
 		const input_height = $('.game__board-height');
 		input_height.trigger('focus');
@@ -144,6 +141,49 @@ describe('Board Action', () => {
 			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 		]).to.deep.equal(controller.board.board);
+	});
+
+	it('Получение не числа в инпуты ширины/высоты', () => {
+
+		const controller = new BoardController();
+
+		const input_height = $('.game__board-height');
+		input_height.trigger('focus');
+		input_height.val('f')
+		input_height.trigger('blur');
+
+		expect(10).to.equal(controller.board.rows);
+		expect(10).to.equal(controller.board.cols);
+	});
+
+	it('Блокировка клавиши Play после нажатия', () => {
+
+		const controller = new BoardController();
+
+		const button_play = $('.game__btn_play');
+		button_play.trigger('click');
+		expect('disabled').to.equal(button_play.attr('disabled'));
+	});
+
+	it('Блокировка клавиши Pause после нажатия', () => {
+
+		const controller = new BoardController();
+
+		const button_pause = $('.game__btn_pause');
+		button_pause.trigger('click');
+		expect('disabled').to.equal(button_pause.attr('disabled'));
+	});
+
+	it('Разблокировка Play после нажатия на Pause', () => {
+
+		const controller = new BoardController();
+
+		const button_play = $('.game__btn_play');
+		const button_pause = $('.game__btn_pause');
+		button_play.trigger('click');
+		expect('disabled').to.equal(button_play.attr('disabled'));
+		button_pause.trigger('click');
+		expect(undefined).to.equal(button_play.attr('disabled'));
 	});
 
 	afterEach(() => {

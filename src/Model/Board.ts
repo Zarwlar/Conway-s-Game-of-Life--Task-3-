@@ -10,13 +10,13 @@ export default class Board {
 	public play: boolean;
 	public canvasBoard;
 
-	constructor(conf ? : any) {
-		conf = conf || {};
-		this.cols = conf.cols || 10;
-		this.rows = conf.rows || 10;
+	constructor() {
 
+		this.cols = 10;
+		this.rows = 10;
 		this.play = false;
 		this.canvasBoard = < HTMLCanvasElement > $('.game__board').get(0);
+
 		document.getElementsByClassName
 		this.fillBoard(this.cols, this.rows);
 	}
@@ -121,11 +121,10 @@ export default class Board {
 			this.nextGen.push([]);
 			for (var j = 0; j < rows; j += 1) {
 				try {
-					this.board[i].push(tmp[i][j]);
-					this.nextGen[i].push(tmp[i][j]);
+					this.board[i].push(tmp[i][j] || 0);
+					this.nextGen[i].push(tmp[i][j] || 0);
 				} catch (e) {
-					this.board[i].push(0);
-					this.nextGen[i].push(0);
+					console.log(`${e.namee}: ${e.message}`);
 				}
 			}
 		}

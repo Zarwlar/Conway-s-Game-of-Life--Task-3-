@@ -27,7 +27,7 @@ export default class BoardController {
 		if (this.board.rows === event.currentTarget.value || event.currentTarget.value < 4 || isNaN(event.currentTarget.value)) {
 			return;
 		}
-		this.board.rows = event.currentTarget.value;
+		this.board.rows = ~~event.currentTarget.value;
 	  this.board.changeSize(this.board.cols, this.board.rows);
 		this.view.draw();
 
@@ -37,7 +37,7 @@ export default class BoardController {
 		if (this.board.cols === event.currentTarget.value || event.currentTarget.value < 4 || isNaN(event.currentTarget.value)) {
 			return;
 		}
-		this.board.cols = event.currentTarget.value;
+		this.board.cols = ~~event.currentTarget.value;
 		this.board.changeSize(this.board.cols, this.board.rows);
 		this.view.draw();
 
