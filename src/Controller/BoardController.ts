@@ -16,8 +16,8 @@ export default class BoardController {
 
 	public pause = () => {
 		this.board.play = false;
-		this.view.pauseBtn.setAttribute('disabled','disabled');
-		this.view.playBtn.removeAttribute('disabled');
+		this.view.$pauseBtn.setAttribute('disabled','disabled');
+		this.view.$playBtn.removeAttribute('disabled');
 
 		return this;
 
@@ -71,8 +71,8 @@ export default class BoardController {
 		if (this.board.play) return false;
 		this.board.play = true;
 		this.animation();
-		this.view.playBtn.setAttribute('disabled', 'disabled');
-		this.view.pauseBtn.removeAttribute('disabled');
+		this.view.$playBtn.setAttribute('disabled', 'disabled');
+		this.view.$pauseBtn.removeAttribute('disabled');
 		return this;
 	}
 

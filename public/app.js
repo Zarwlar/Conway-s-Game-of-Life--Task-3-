@@ -10340,8 +10340,8 @@ var BoardController = (function () {
         var _this = this;
         this.pause = function () {
             _this.board.play = false;
-            _this.view.pauseBtn.setAttribute('disabled', 'disabled');
-            _this.view.playBtn.removeAttribute('disabled');
+            _this.view.$pauseBtn.setAttribute('disabled', 'disabled');
+            _this.view.$playBtn.removeAttribute('disabled');
             return _this;
         };
         this.changeWidth = function (event) {
@@ -10384,8 +10384,8 @@ var BoardController = (function () {
                 return false;
             _this.board.play = true;
             _this.animation();
-            _this.view.playBtn.setAttribute('disabled', 'disabled');
-            _this.view.pauseBtn.removeAttribute('disabled');
+            _this.view.$playBtn.setAttribute('disabled', 'disabled');
+            _this.view.$pauseBtn.removeAttribute('disabled');
             return _this;
         };
         this.clickHandler = function (event) {
@@ -10415,13 +10415,13 @@ var $ = __webpack_require__(0);
 var Board = (function () {
     function Board() {
         var _this = this;
-        this._board = [];
+        this._cellmatrix = [];
         this.nextGen = [];
         this.preset = function (preset) {
             for (var i = 0, c = preset.length; i < c; i += 1) {
                 for (var j = 0, r = preset[i].length; j < r; j += 1) {
-                    if ((preset[i][j] != undefined) && (_this.board[i][j] != undefined) && (_this.board[i][j] === 0 || _this.board[i][j] === 1)) {
-                        _this.board[i][j] = preset[i][j];
+                    if ((preset[i][j] != undefined) && (_this.cellmatrix[i][j] != undefined) && (_this.cellmatrix[i][j] === 0 || _this.cellmatrix[i][j] === 1)) {
+                        _this.cellmatrix[i][j] = preset[i][j];
                     }
                 }
             }
@@ -10431,26 +10431,26 @@ var Board = (function () {
             if (state !== 0 && state !== 1) {
                 state = 0;
             }
-            _this.board[x][y] = state;
+            _this.cellmatrix[x][y] = state;
             return _this;
         };
         this.getCellState = function (x, y) {
-            return _this.board[x][y];
+            return _this.cellmatrix[x][y];
         };
         this.toggleState = function (x, y) {
-            if (_this.board[x][y] === 0) {
-                _this.board[x][y] = 1;
+            if (_this.cellmatrix[x][y] === 0) {
+                _this.cellmatrix[x][y] = 1;
             }
             else {
-                _this.board[x][y] = 0;
+                _this.cellmatrix[x][y] = 0;
             }
-            return _this.board[x][y];
+            return _this.cellmatrix[x][y];
         };
         this.checkState = function (x, y) {
-            var topRow = (y === 0) ? _this.rows - 1 : y - 1, bottomRow = (y === _this.rows - 1) ? 0 : y + 1, leftCol = (x === 0) ? _this.cols - 1 : x - 1, rightCol = (x === _this.cols - 1) ? 0 : x + 1, sum = 0, state = _this.board[x][y];
-            sum = _this.board[leftCol][topRow] + _this.board[x][topRow] + _this.board[rightCol][topRow] +
-                _this.board[leftCol][y] + _this.board[rightCol][y] +
-                _this.board[leftCol][bottomRow] + _this.board[x][bottomRow] + _this.board[rightCol][bottomRow];
+            var topRow = (y === 0) ? _this.rows - 1 : y - 1, bottomRow = (y === _this.rows - 1) ? 0 : y + 1, leftCol = (x === 0) ? _this.cols - 1 : x - 1, rightCol = (x === _this.cols - 1) ? 0 : x + 1, sum = 0, state = _this.cellmatrix[x][y];
+            sum = _this.cellmatrix[leftCol][topRow] + _this.cellmatrix[x][topRow] + _this.cellmatrix[rightCol][topRow] +
+                _this.cellmatrix[leftCol][y] + _this.cellmatrix[rightCol][y] +
+                _this.cellmatrix[leftCol][bottomRow] + _this.cellmatrix[x][bottomRow] + _this.cellmatrix[rightCol][bottomRow];
             if (state === 0 && sum === 3) {
                 state = 1;
             }
@@ -10477,26 +10477,26 @@ var Board = (function () {
         };
         this.checkBoard = function () {
             _this.getNextGen();
-            _this.cloneBoard(_this.nextGen, _this.board);
+            _this.cloneBoard(_this.nextGen, _this.cellmatrix);
             return _this;
         };
         this.clear = function () {
             for (var i = 0; i < _this.cols; i += 1) {
                 for (var j = 0; j < _this.rows; j += 1) {
-                    _this.board[i][j] = 0;
+                    _this.cellmatrix[i][j] = 0;
                 }
             }
-            return _this.board;
+            return _this.cellmatrix;
         };
         this.changeSize = function (cols, rows) {
-            var tmp = _this.board;
-            _this._board = [];
+            var tmp = _this.cellmatrix;
+            _this._cellmatrix = [];
             for (var i = 0; i < cols; i += 1) {
-                _this.board.push([]);
+                _this.cellmatrix.push([]);
                 _this.nextGen.push([]);
                 for (var j = 0; j < rows; j += 1) {
                     try {
-                        _this.board[i].push(tmp[i][j] || 0);
+                        _this.cellmatrix[i].push(tmp[i][j] || 0);
                         _this.nextGen[i].push(tmp[i][j] || 0);
                     }
                     catch (e) {
@@ -10505,14 +10505,14 @@ var Board = (function () {
                 }
             }
             tmp = [];
-            return _this.board;
+            return _this.cellmatrix;
         };
         this.fillBoard = function (cols, rows) {
             for (var i = 0; i < cols; i += 1) {
-                _this.board.push([]);
+                _this.cellmatrix.push([]);
                 _this.nextGen.push([]);
                 for (var j = 0; j < rows; j += 1) {
-                    _this.board[i].push(0);
+                    _this.cellmatrix[i].push(0);
                     _this.nextGen[i].push(0);
                 }
             }
@@ -10520,13 +10520,13 @@ var Board = (function () {
         this.cols = 10;
         this.rows = 10;
         this.play = false;
-        this.canvasBoard = $('.game__board').get(0);
+        this.$canvasBoard = $('.game__board').get(0);
         document.getElementsByClassName;
         this.fillBoard(this.cols, this.rows);
     }
-    Object.defineProperty(Board.prototype, "board", {
+    Object.defineProperty(Board.prototype, "cellmatrix", {
         get: function () {
-            return this._board;
+            return this._cellmatrix;
         },
         enumerable: true,
         configurable: true
@@ -10564,24 +10564,24 @@ var View = (function () {
             return _this;
         };
         this.controller = BoardController;
-        this.playBtn = $('.game__btn_play').get(0);
-        this.pauseBtn = $('.game__btn_pause').get(0);
-        this.clearBtn = $('.game__btn_clear').get(0);
-        this.widthInput = $('.game__board-width').get(0);
-        this.heightInput = $('.game__board-height').get(0);
-        this.width = BoardController.board.canvasBoard.offsetWidth;
-        this.height = BoardController.board.canvasBoard.offsetHeight;
-        if (BoardController.board.canvasBoard.getContext) {
-            this.ctx = BoardController.board.canvasBoard.getContext('2d'),
+        this.$playBtn = $('.game__btn_play').get(0);
+        this.$pauseBtn = $('.game__btn_pause').get(0);
+        this.$clearBtn = $('.game__btn_clear').get(0);
+        this.$widthInput = $('.game__board-width').get(0);
+        this.$heightInput = $('.game__board-height').get(0);
+        this.width = BoardController.board.$canvasBoard.offsetWidth;
+        this.height = BoardController.board.$canvasBoard.offsetHeight;
+        if (BoardController.board.$canvasBoard.getContext) {
+            this.ctx = BoardController.board.$canvasBoard.getContext('2d'),
                 this.ctx.fillStyle = 'rgb(0,0,0)';
         }
         BoardController.view = this;
-        this.addEvent(this.playBtn, 'click', BoardController.play);
-        this.addEvent(this.pauseBtn, 'click', BoardController.pause);
-        this.addEvent(this.clearBtn, 'click', BoardController.clear);
-        this.addEvent(BoardController.board.canvasBoard, 'click', BoardController.clickHandler);
-        this.addEvent(this.widthInput, 'blur', BoardController.changeWidth);
-        this.addEvent(this.heightInput, 'blur', BoardController.changeHeight);
+        this.addEvent(this.$playBtn, 'click', BoardController.play);
+        this.addEvent(this.$pauseBtn, 'click', BoardController.pause);
+        this.addEvent(this.$clearBtn, 'click', BoardController.clear);
+        this.addEvent(BoardController.board.$canvasBoard, 'click', BoardController.clickHandler);
+        this.addEvent(this.$widthInput, 'blur', BoardController.changeWidth);
+        this.addEvent(this.$heightInput, 'blur', BoardController.changeHeight);
         this.draw();
     }
     return View;
@@ -10608,7 +10608,7 @@ exports = module.exports = __webpack_require__(6)(undefined);
 
 
 // module
-exports.push([module.i, ".game__board {\r\n\tbackground: #ccc;\r\n\ttext-align: center;\r\n}\r\n\r\n.game__buttons {\r\n\ttext-align: center;\r\n}\r\n\r\n.game__board-container {\r\n\ttext-align: center;\r\n}\r\n\r\n.game__buttons > * {\r\n\tmargin: 0 1%;\r\n}\r\n\r\n.game__board-size-input > * {\r\n\t\tdisplay: block;\r\n\t\tmargin: 1% auto;\r\n\t\ttext-align: center;\r\n}", ""]);
+exports.push([module.i, ".game__board {\n\tbackground: #ccc;\n\ttext-align: center;\n}\n\n.game__buttons {\n\ttext-align: center;\n}\n\n.game__board-container {\n\ttext-align: center;\n}\n\n.game__buttons > * {\n\tmargin: 0 1%;\n}\n\n.game__board-size-input > * {\n\t\tdisplay: block;\n\t\tmargin: 1% auto;\n\t\ttext-align: center;\n}", ""]);
 
 // exports
 
