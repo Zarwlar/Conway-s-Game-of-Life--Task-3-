@@ -1,52 +1,47 @@
-import Board from '../src/Model/Board'
-import BoardController from '../src/Controller/BoardController'
-import View from '../src/View/View'
-import * as $ from 'jquery'
-import {
-    expect
-} from 'chai';
+import { expect } from 'chai';
+import * as $ from 'jquery';
+import BoardController from '../src/Controller/BoardController';
+import Board from '../src/Model/Board';
+import View from '../src/View/View';
 
 describe('Board Action', () => {
 
-
     beforeEach(() => {
-        const canvas = document.createElement('canvas');
-        canvas.classList.add('game__board');
+        const canvas: HTMLCanvasElement = document.createElement('canvas');
+        canvas.classList.add('js-game__board');
         canvas.setAttribute('width', '990');
         canvas.setAttribute('height', '500');
         document.body.appendChild(canvas);
 
-        const buttons = ['game__btn_play', 'game__btn_pause', 'game__btn_clear'];
-        buttons.forEach((name) => {
-            const elem = document.createElement('button');
+        const buttons: string[] = ['js-game__button-play', 'js-game__button-pause', 'js-game__button-clear'];
+        buttons.forEach((name: string) => {
+            const elem: HTMLButtonElement = document.createElement('button');
             elem.classList.add(name);
             document.body.appendChild(elem);
         });
 
-        const inputs = ['game__board-width', 'game__board-height'];
-        inputs.forEach((name) => {
-            const elem = document.createElement('input');
+        const inputs: string[] = ['js-game__input-width', 'js-game__input-height'];
+        inputs.forEach((name: string) => {
+            const elem: HTMLInputElement = document.createElement('input');
             elem.classList.add(name);
             document.body.appendChild(elem);
         });
     });
 
-
-
     it('Обработка клика по клетке', () => {
 
-        const controller = new BoardController();
-        const canvas = document.getElementsByClassName('game__board')[0];
+        const controller: BoardController = new BoardController();
+        const canvas: any = document.getElementsByClassName('js-game__board')[0];
 
-        function click(el) {
-            let ev = document.createEvent("MouseEvent");
+        function click(el: any): void {
+            const ev: MouseEvent = document.createEvent('MouseEvent');
             ev.initMouseEvent(
-                "click",
+                'click',
                 true, true,
                 window, null,
                 25, 133, 27, 135,
                 false, false, false, false,
-                0, null
+                0, null,
             );
             el.dispatchEvent(ev);
         }
@@ -63,16 +58,15 @@ describe('Board Action', () => {
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        ]).to.deep.equal(controller.board.cellmatrix);
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        ]).to.deep.equal(controller.Board.cellmatrix);
     });
-
 
     it('Получение следующего поколения', () => {
 
-        const controller = new BoardController();
+        const controller: BoardController = new BoardController();
 
-        const preset = [
+        const preset: number[][] = [
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -82,9 +76,9 @@ describe('Board Action', () => {
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         ];
-        const nextGen = [
+        const nextGen: number[][]  = [
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
@@ -94,21 +88,21 @@ describe('Board Action', () => {
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         ];
-        controller.board.preset(preset);
+        controller.Board.preset(preset);
 
-        expect(nextGen).to.deep.equal(controller.board.getNextGen());
+        expect(nextGen).to.deep.equal(controller.Board.getNextGen());
     });
 
     it('Изменение ширины по unfocus', () => {
 
-        const controller = new BoardController();
+        const controller: BoardController = new BoardController();
 
-        const input_width = $('.game__board-width');
-        input_width.trigger('focus');
-        input_width.val('5')
-        input_width.trigger('blur');
+        const inputWidth: $ = $('.js-game__input-width');
+        inputWidth.trigger('focus');
+        inputWidth.val('5');
+        inputWidth.trigger('blur');
 
         expect([
             [0, 0, 0, 0, 0],
@@ -120,75 +114,73 @@ describe('Board Action', () => {
             [0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0]
-        ]).to.deep.equal(controller.board.cellmatrix);
+            [0, 0, 0, 0, 0],
+        ]).to.deep.equal(controller.Board.cellmatrix);
     });
-
 
     it('Изменение высоты по unfocus', () => {
 
-        const controller = new BoardController();
+        const controller: BoardController = new BoardController();
 
-        const input_height = $('.game__board-height');
-        input_height.trigger('focus');
-        input_height.val('5')
-        input_height.trigger('blur');
+        const inputHeight: $ = $('.js-game__input-height');
+        inputHeight.trigger('focus');
+        inputHeight.val('5');
+        inputHeight.trigger('blur');
 
         expect([
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        ]).to.deep.equal(controller.board.cellmatrix);
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        ]).to.deep.equal(controller.Board.cellmatrix);
     });
 
     it('Получение не числа в инпуты ширины/высоты', () => {
 
-        const controller = new BoardController();
+        const controller: BoardController = new BoardController();
 
-        const input_height = $('.game__board-height');
-        input_height.trigger('focus');
-        input_height.val('f')
-        input_height.trigger('blur');
+        const inputHeight: $ = $('.js-game__input-height');
+        inputHeight.trigger('focus');
+        inputHeight.val('f');
+        inputHeight.trigger('blur');
 
-        expect(10).to.equal(controller.board.rows);
-        expect(10).to.equal(controller.board.cols);
+        expect(10).to.equal(controller.Board.rows);
+        expect(10).to.equal(controller.Board.cols);
     });
 
     it('Блокировка клавиши Play после нажатия', () => {
 
-        const controller = new BoardController();
+        const controller: BoardController = new BoardController();
 
-        const button_play = $('.game__btn_play');
-        button_play.trigger('click');
-        expect('disabled').to.equal(button_play.attr('disabled'));
+        const buttonPlay: $ = $('.js-game__button-play');
+        buttonPlay.trigger('click');
+        expect('disabled').to.equal(buttonPlay.attr('disabled'));
     });
 
     it('Блокировка клавиши Pause после нажатия', () => {
 
-        const controller = new BoardController();
+        const controller: BoardController = new BoardController();
 
-        const button_pause = $('.game__btn_pause');
-        button_pause.trigger('click');
-        expect('disabled').to.equal(button_pause.attr('disabled'));
+        const buttonPause: $ = $('.js-game__button-pause');
+        buttonPause.trigger('click');
+        expect('disabled').to.equal(buttonPause.attr('disabled'));
     });
 
     it('Разблокировка Play после нажатия на Pause', () => {
 
-        const controller = new BoardController();
+        const controller: BoardController = new BoardController();
 
-        const button_play = $('.game__btn_play');
-        const button_pause = $('.game__btn_pause');
-        button_play.trigger('click');
-        expect('disabled').to.equal(button_play.attr('disabled'));
-        button_pause.trigger('click');
-        expect(undefined).to.equal(button_play.attr('disabled'));
+        const buttonPlay: $ = $('.js-game__button-play');
+        const buttonPause: $ = $('.js-game__button-pause');
+        buttonPlay.trigger('click');
+        expect('disabled').to.equal(buttonPlay.attr('disabled'));
+        buttonPause.trigger('click');
+        expect(undefined).to.equal(buttonPlay.attr('disabled'));
     });
 
     afterEach(() => {
         document.body.innerHTML = '';
     });
-
 
 });

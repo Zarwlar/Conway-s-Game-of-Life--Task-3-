@@ -1,6 +1,7 @@
-var path = require('path');
-const webpack = require('webpack');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require('path'),
+ webpack = require('webpack'),
+ HtmlWebpackPlugin = require('html-webpack-plugin'),
+ ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
     entry: ['./src/app.js'],
@@ -16,25 +17,37 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                use: [ 'style-loader', 'css-loader' ]
+                use: ['style-loader', 'css-loader']
+            },
+            {
+                test: /\.styl$/,
+                use: ExtractTextPlugin.extract({
+                    fallback: "style-loader",
+                    use: ["css-loader", 'stylus-loader']
+                })
             },
             {
                 test: /\.pug$/,
-                use: 'pug-loader'
+                use: ['html-loader', 'pug-html-loader']
             }
         ]
     },
     resolve: {
         extensions: ['.ts', '.js', '.tsx', '.jsx']
     },
-    plugins: [new webpack.ProvidePlugin({
+
+    plugins: [
+        new HtmlWebpackPlugin({
+            filename: 'index.html',
+            template: './src/index.pug',
+            inject: 'body',
+        }),
+        new ExtractTextPlugin({
+            filename: 'app.css'
+        }),
+        new webpack.ProvidePlugin({
             $: 'jquery',
             jQuery: 'jquery'
-        }),
-        new HtmlWebpackPlugin({
-            chunks: ['app'],
-            filename: 'index.html',
-            template: './src/index.pug'
         })
     ]
 }

@@ -1,0 +1,21 @@
+.game__horizontal-position {
+  text-align: center;
+}
+.game__board {
+  background: #ccc;
+  text-align: center;
+}
+.game__buttons,
+.game__inputs {
+  text-align: center;
+}
+.game__button {
+  margin: 0 1%;
+}
+.game__input {
+  display: block;
+  margin: 0.5% auto;
+}
+.game__input:first-child {
+  margin-bottom: 0;
+}

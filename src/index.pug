@@ -1,16 +1,19 @@
 doctype html
-html(lang='ja')
+html(lang='ru')
   head
-    meta(charset='utf-8')
+    meta(charset='utf-8')    
+    meta(name="description" content="Conway's Game of Life")
+    meta(name="keywords" content="Game,Life,GameOfLife")
+    meta(name='author' content="Alexey Zhamylik")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
     title Game of Life
-    script(src='app.js')
   body
-  .game__board-container
-    canvas.game__board(width="990" height="500")
-    div.game__buttons
-      button.game__btn_play Старт
-      button.game__btn_pause Пауза
-      button.game__btn_clear Очистить
-    div.game__board-size-input
-      input.game__board-width(type='text', placeholder='Ширина')
-      input.game__board-height(type='text', placeholder='Высота')
+    .game.game__horizontal-position
+      canvas.js-game__board.game__board(width="990" height="500")
+      .game__buttons
+        button.js-game__button-play.game__button Старт
+        button.js-game__button-pause.game__button Пауза
+        button.js-game__button-clear.game__button Очистить
+      .game__inputs
+        input.js-game__input-width.game__input(type='text', placeholder='Ширина')
+        input.js-game__input-height.game__input(type='text', placeholder='Высота')
