@@ -11,17 +11,17 @@ export default class BoardController {
     constructor() {
         this.Board = new Board();
         this.View = new View();
-        this.View.width = this.Board.$canvasBoard.offsetWidth;
-        this.View.height = this.Board.$canvasBoard.offsetHeight;
-        this.View.ctx = this.Board.$canvasBoard.getContext('2d');
+        this.View.width = this.View.$canvasBoard.offsetWidth;
+        this.View.height = this.View.$canvasBoard.offsetHeight;
+        this.View.ctx = this.View.$canvasBoard.getContext('2d');
         this.View.ctx.fillStyle = 'rgb(0,0,0)';
         this.View.addEvent(this.View.$playBtn, 'click', this.play);
         this.View.addEvent(this.View.$pauseBtn, 'click', this.pause);
         this.View.addEvent(this.View.$clearBtn, 'click', this.clear);
-        this.View.addEvent(this.Board.$canvasBoard, 'click', this.clickHandler);
-        this.View.addEvent(this.View.$widthInput, 'blur', this.changeRows);
-        this.View.addEvent(this.View.$heightInput, 'blur', this.changeCols);
-        this.View.draw(this.Board);
+        this.View.addEvent(this.View.$canvasBoard, 'click', this.clickHandler);
+        this.View.addEvent(this.View.$widthInput, 'blur', this.resizeWidth);
+        this.View.addEvent(this.View.$heightInput, 'blur', this.resizeHeight);
+        this.View.draw(this.Board.cellmatrix);
 }
 
     public pause = (): BoardController => {
@@ -31,14 +31,14 @@ export default class BoardController {
         return this;
     }
 
-    public changeRows = (event: Event): void => {
+    public resizeWidth = (event: Event): void => {
         const value: number = Number((event.currentTarget as HTMLInputElement).value);
         if (this.validateInputSize('rows', value)) {
             this.changeCellMatrixSize('rows', value);
         }
     }
 
-    public changeCols= (event: Event): void => {
+    public resizeHeight= (event: Event): void => {
         const value: number  = Number((event.currentTarget as HTMLInputElement).value);
         if (this.validateInputSize('cols', value)) {
             this.changeCellMatrixSize('cols', value);
@@ -48,7 +48,7 @@ export default class BoardController {
     public clear = (): BoardController => {
         this.Board.clear();
         if (!this.Board.play) {
-            this.View.draw(this.Board);
+            this.View.draw(this.Board.cellmatrix);
         }
         return this;
     }
@@ -60,7 +60,7 @@ export default class BoardController {
                 return;
             }
             this.Board.checkBoard();
-            this.View.draw(this.Board);
+            this.View.draw(this.Board.cellmatrix);
             window.setTimeout(animationLoop.bind(this), 400);
         }).bind(this)();
 
@@ -84,7 +84,7 @@ export default class BoardController {
         const y: number  = (receivedEvent.offsetX / this.View.itemWidth);
         this.Board.toggleState(Math.floor(x), Math.floor(y));
         if (!this.Board.play) {
-            this.View.draw(this.Board);
+            this.View.draw(this.Board.cellmatrix);
         }
         return [x, y];
     }
@@ -99,7 +99,7 @@ export default class BoardController {
     private changeCellMatrixSize(position: string, value: number): void {
         this.Board[position] = Math.ceil(value);
         this.Board.changeSize(this.Board.cols, this.Board.rows);
-        this.View.draw(this.Board);
+        this.View.draw(this.Board.cellmatrix);
     }
 
 }

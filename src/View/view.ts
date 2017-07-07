@@ -9,6 +9,7 @@ export default class View {
     public $clearBtn: HTMLButtonElement;
     public $heightInput: HTMLInputElement;
     public $widthInput: HTMLInputElement;
+    public $canvasBoard: HTMLCanvasElement;
     public ctx: CanvasRenderingContext2D;
     public height: number;
     public width: number;
@@ -21,15 +22,16 @@ export default class View {
         this.$clearBtn = $('.js-game__button-clear').get(0) as HTMLButtonElement;
         this.$widthInput = $('.js-game__input-width').get(0) as HTMLInputElement;
         this.$heightInput = $('.js-game__input-height').get(0) as HTMLInputElement;
+        this.$canvasBoard = $('.js-game__board').get(0) as HTMLCanvasElement;
     }
 
-    public draw = (board: Board): View => {
-        this.itemWidth = this.width / board.rows;
-        this.itemHeight = this.height / board.cols;
+    public draw = (cellmatrix: number[][]): View => {
+        this.itemWidth = this.width / cellmatrix[0].length;
+        this.itemHeight = this.height / cellmatrix.length;
         this.ctx.clearRect(0, 0, this.width, this.height);
-        for (let i = 0; i < board.cols; i++) {
-             for (let j = 0; j < board.rows; j++) {
-                 if (!!(board.getCellState(i, j))) {
+        for (let i = 0; i < cellmatrix.length; i++) {
+             for (let j = 0; j < cellmatrix[i].length; j++) {
+                 if (!!(cellmatrix[i][j])) {
                         this.ctx.fillRect(j * this.itemWidth, i * this.itemHeight, this.itemWidth, this.itemHeight);
                     }
                 }

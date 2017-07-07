@@ -6,23 +6,21 @@ export default class Board {
     public rows: number;
     public cols: number;
     public play: boolean;
-    public $canvasBoard: HTMLCanvasElement;
-    private cellMatrix: any[any[number]] = [];
-    private nextGen: any[any[number]] = [];
+    private cellMatrix: number[][] = [];
+    private nextGen: number[][] = [];
 
     constructor() {
         this.cols = 10;
         this.rows = 10;
         this.play = false;
-        this.$canvasBoard = $('.js-game__board').get(0) as HTMLCanvasElement;
         this.fillBoard();
     }
 
-    get cellmatrix(): any[any[number]] {
+    get cellmatrix(): number[][] {
         return this.cellMatrix;
     }
 
-    public preset = (preset: any[any[number]]): Board => {
+    public preset = (preset: number[][]): Board => {
         preset.forEach((rows: number[], i: number) => {
             rows.forEach((cols: number, j: number) => {
                 if (this.cellHaveValue(preset, i, j) && this.cellNotUndefined(preset, i , j)) {
@@ -46,7 +44,7 @@ export default class Board {
         return this.cellmatrix[x][y];
     }
 
-    public getNextGen = (): any[any[number]] => {
+    public getNextGen = (): number[][] => {
         this.cellmatrix.forEach((rows: number[], i: number) => {
             rows.forEach((cols: number, j: number) => {
                 this.nextGen[i][j] = this.checkState(i, j);
@@ -61,7 +59,7 @@ export default class Board {
         return this;
     }
 
-    public clear = (): any[any[number]] => {
+    public clear = (): number[][] => {
         this.cellmatrix.forEach((rows: number[], i: number) => {
             rows.forEach((cols: number, j: number) => {
                 this.cellmatrix[i][j] = 0;
@@ -70,22 +68,23 @@ export default class Board {
         return this.cellmatrix;
     }
 
-    public changeSize = (cols: number, rows: number): any[any[number]] => {
-        let tmp = this.cellmatrix;
-        this.cellMatrix = [];
+    public changeSize = (cols: number, rows: number): number[][] => {
+        let oldCellMatrix: number[][] = this.cellmatrix;
+        this.cellMatrix = [cols][rows];
         for (let i = 0; i < cols; i += 1) {
-            this.cellmatrix.push([]);
+            this.cellMatrix.push([]);
             this.nextGen.push([]);
             for (let j = 0; j < rows; j += 1) {
-                try {
-                    this.cellmatrix[i].push(tmp[i][j] || 0);
-                    this.nextGen[i].push(tmp[i][j] || 0);
-                } catch (e) {
-                    continue;
-                }
+               // try {
+                    this.cellmatrix[i].push(oldCellMatrix[i][j] || 0);
+                    this.nextGen[i].push(oldCellMatrix[i][j] || 0);
+                // } catch (e) {
+                //     
+                //     continue;
+                // }
             }
         }
-        tmp = [];
+        oldCellMatrix = [];
         return this.cellmatrix;
     }
 
@@ -128,21 +127,21 @@ export default class Board {
         return state;
     }
 
-    private cellHaveValue = (preset: any[any[number]], i: number, j: number): boolean => {
+    private cellHaveValue = (preset: number[][], i: number, j: number): boolean => {
            if ((this.cellmatrix[i][j] === 0 || this.cellmatrix[i][j] === 1)) {
                     return true;
         }
            return false;
     }
 
-    private cellNotUndefined = (preset: any[any[number]], i: number, j: number): boolean => {
+    private cellNotUndefined = (preset: number[][], i: number, j: number): boolean => {
         if ((preset[i][j] !== undefined) && (this.cellmatrix[i][j] !== undefined)) {
             return true;
         }
         return false;
     }
 
-    private cloneBoard = (nextGen: any[any[number]], board: any[any[number]]): any[any[number]] => {
+    private cloneBoard = (nextGen: number[][], board: number[][]): number[][] => {
         this.cellmatrix.forEach((rows: number[], i: number) => {
             rows.forEach((cols: number, j: number) => {
                 board[i][j] = nextGen[i][j];
