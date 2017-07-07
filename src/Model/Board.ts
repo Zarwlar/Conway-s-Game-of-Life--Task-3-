@@ -69,19 +69,18 @@ export default class Board {
     }
 
     public changeSize = (cols: number, rows: number): number[][] => {
-        let oldCellMatrix: number[][] = this.cellmatrix;
-        this.cellMatrix = [cols][rows];
+        let oldCellMatrix = this.cellmatrix;
+        this.cellMatrix = [];
         for (let i = 0; i < cols; i += 1) {
-            this.cellMatrix.push([]);
+            this.cellmatrix.push([]);
             this.nextGen.push([]);
             for (let j = 0; j < rows; j += 1) {
-               // try {
+                try {
                     this.cellmatrix[i].push(oldCellMatrix[i][j] || 0);
                     this.nextGen[i].push(oldCellMatrix[i][j] || 0);
-                // } catch (e) {
-                //     
-                //     continue;
-                // }
+                } catch (e) {
+                    continue;
+                }
             }
         }
         oldCellMatrix = [];

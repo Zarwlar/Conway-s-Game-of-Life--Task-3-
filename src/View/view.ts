@@ -1,6 +1,5 @@
 'use strict';
 import * as $ from 'jquery';
-import Board from '../Model/Board';
 
 export default class View {
 
@@ -29,13 +28,13 @@ export default class View {
         this.itemWidth = this.width / cellmatrix[0].length;
         this.itemHeight = this.height / cellmatrix.length;
         this.ctx.clearRect(0, 0, this.width, this.height);
-        for (let i = 0; i < cellmatrix.length; i++) {
-             for (let j = 0; j < cellmatrix[i].length; j++) {
-                 if (!!(cellmatrix[i][j])) {
-                        this.ctx.fillRect(j * this.itemWidth, i * this.itemHeight, this.itemWidth, this.itemHeight);
-                    }
+        cellmatrix.forEach((rows: number[], i: number) => {
+            rows.forEach((cols: number, j: number) => {
+                if (!!cellmatrix[i][j]) {
+                    this.ctx.fillRect(j * this.itemWidth, i * this.itemHeight, this.itemWidth, this.itemHeight);
                 }
-            }
+            });
+         });
         return this;
         }
 
