@@ -98,7 +98,7 @@ export default class BoardController {
 
     private changeCellMatrixSize(position: string, value: number): void {
         this.Board[position] = Math.ceil(value);
-        this.Board.changeSize(this.Board.cols, this.Board.rows);
+        this.Board.fillResizedBoard(this.Board.cols, this.Board.rows);
         this.View.draw(this.Board.cellmatrix);
     }
 

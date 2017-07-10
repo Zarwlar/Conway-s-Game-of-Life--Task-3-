@@ -68,7 +68,7 @@ export default class Board {
         return this.cellmatrix;
     }
 
-    public changeSize = (cols: number, rows: number): number[][] => {
+    public fillResizedBoard = (cols: number, rows: number): number[][] => {
         let oldCellMatrix = this.cellmatrix;
         this.cellMatrix = [];
         for (let i = 0; i < cols; i += 1) {
@@ -79,7 +79,8 @@ export default class Board {
                     this.cellmatrix[i].push(oldCellMatrix[i][j] || 0);
                     this.nextGen[i].push(oldCellMatrix[i][j] || 0);
                 } catch (e) {
-                    continue;
+                    this.cellmatrix[i].push(0);
+                    this.nextGen[i].push(0);
                 }
             }
         }
