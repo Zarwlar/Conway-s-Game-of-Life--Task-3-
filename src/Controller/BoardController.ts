@@ -53,7 +53,7 @@ export default class BoardController {
         return this;
     }
 
-    public animation = (): BoardController => {
+public animation = (): BoardController => {
 
         (function animationLoop(): void {
             if (!this.Board.play) {

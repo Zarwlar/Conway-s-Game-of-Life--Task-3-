@@ -8,6 +8,7 @@ export default class Board {
     public play: boolean;
     private cellMatrix: number[][] = [];
     private nextGen: number[][] = [];
+    private oldCellMatrix: number[][] = [];
 
     constructor() {
         this.cols = 10;
@@ -55,7 +56,7 @@ export default class Board {
 
     public checkBoard = (): Board => {
         this.getNextGen();
-        this.cloneBoard(this.nextGen, this.cellmatrix);
+        this.copyBoard(this.nextGen, this.cellmatrix);
         return this;
     }
 
@@ -69,34 +70,31 @@ export default class Board {
     }
 
     public fillResizedBoard = (cols: number, rows: number): number[][] => {
-        let oldCellMatrix = this.cellmatrix;
-        this.cellMatrix = [];
-        for (let i = 0; i < cols; i += 1) {
-            this.cellmatrix.push([]);
-            this.nextGen.push([]);
-            for (let j = 0; j < rows; j += 1) {
+        this.oldCellMatrix = this.cloneBoard(this.cellMatrix);
+        this.cellMatrix = Array(this.cols)
+            .fill(0)
+            .map(() => Array(this.rows)
+            .fill(0));
+        this.cellMatrix = this.cellMatrix.map((x: any, i: number): any => {
+           return x.map((y: number, j: number) => {
                 try {
-                    this.cellmatrix[i].push(oldCellMatrix[i][j] || 0);
-                    this.nextGen[i].push(oldCellMatrix[i][j] || 0);
+                    return this.oldCellMatrix[i][j] || 0;
                 } catch (e) {
-                    this.cellmatrix[i].push(0);
-                    this.nextGen[i].push(0);
+                    return 0;
                 }
-            }
-        }
-        oldCellMatrix = [];
+            });
+        });
+        this.nextGen = this.cloneBoard(this.cellMatrix);
+        this.oldCellMatrix = [];
         return this.cellmatrix;
     }
 
     public fillBoard = (): void => {
-        for (let i = 0; i < this.cols; i += 1) {
-            this.cellmatrix.push([]);
-            this.nextGen.push([]);
-            for (let j = 0; j < this.rows; j += 1) {
-                this.cellmatrix[i].push(0);
-                this.nextGen[i].push(0);
-            }
-        }
+        this.cellMatrix = Array(this.cols)
+            .fill(0)
+            .map(() => Array(this.rows)
+            .fill(0));
+        this.nextGen = this.cloneBoard(this.cellMatrix);
     }
 
     private setCellState = (x: number, y: number, state: number): Board => {
@@ -141,13 +139,19 @@ export default class Board {
         return false;
     }
 
-    private cloneBoard = (nextGen: number[][], board: number[][]): number[][] => {
+    private copyBoard = (nextGen: number[][], board: number[][]): number[][] => {
         this.cellmatrix.forEach((rows: number[], i: number) => {
             rows.forEach((cols: number, j: number) => {
                 board[i][j] = nextGen[i][j];
             });
         });
         return nextGen;
+    }
+
+    private cloneBoard = (board: number[][]): any => {
+       return board.map((arr: any ): any => {
+            return arr.slice();
+        });
     }
 
 }
