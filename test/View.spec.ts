@@ -1,31 +1,12 @@
 import { expect } from 'chai';
 import * as $ from 'jquery';
 import BoardController from '../src/Controller/BoardController';
-import Board from '../src/Model/Board';
-import View from '../src/View/View';
+import createHTML from './_createHTML';
 
-describe('Board Action', () => {
+describe('Тест View', () => {
 
     beforeEach(() => {
-        const canvas: HTMLCanvasElement = document.createElement('canvas');
-        canvas.classList.add('js-game__board');
-        canvas.setAttribute('width', '990');
-        canvas.setAttribute('height', '500');
-        document.body.appendChild(canvas);
-
-        const buttons: string[] = ['js-game__button-play', 'js-game__button-pause', 'js-game__button-clear'];
-        buttons.forEach((name: string) => {
-            const elem: HTMLButtonElement = document.createElement('button');
-            elem.classList.add(name);
-            document.body.appendChild(elem);
-        });
-
-        const inputs: string[] = ['js-game__input-width', 'js-game__input-height'];
-        inputs.forEach((name: string) => {
-            const elem: HTMLInputElement = document.createElement('input');
-            elem.classList.add(name);
-            document.body.appendChild(elem);
-        });
+        createHTML();
     });
 
     it('Обработка клика по клетке', () => {
@@ -60,39 +41,6 @@ describe('Board Action', () => {
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         ]).to.deep.equal(controller.Board.cellmatrix);
-    });
-
-    it('Получение следующего поколения', () => {
-
-        const controller: BoardController = new BoardController();
-
-        const preset: number[][] = [
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        ];
-        const nextGen: number[][]  = [
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        ];
-        controller.Board.preset(preset);
-
-        expect(nextGen).to.deep.equal(controller.Board.getNextGen());
     });
 
     it('Изменение ширины по unfocus', () => {

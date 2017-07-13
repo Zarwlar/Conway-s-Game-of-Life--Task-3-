@@ -6,14 +6,14 @@ module.exports = function (config) {
     basePath: '',
     frameworks: ['mocha', 'chai', 'sinon'],
     files: [
-      'test/**/*.ts',
-      'src/Polyfill/**/**/*.ts'
+      'src/Polyfill/**/**/*.ts',
+      'test/**/*.ts'
     ],
     exclude: [
     ],
     preprocessors: {
-      'test/**/*.ts': ['webpack'],
       'src/Polyfill/**/**/*.ts': ['webpack'],
+      'test/**/*.ts': ['webpack']
     },
     webpack: {
       module: webpackConfig.module,

@@ -24,6 +24,17 @@ export default class BoardController {
         this.View.draw(this.Board.cellmatrix);
 }
 
+    public play = (): any => {
+        if (this.Board.play) {
+            return false;
+        }
+        this.Board.play = true;
+        this.animation();
+        this.View.$playBtn.setAttribute('disabled', 'disabled');
+        this.View.$pauseBtn.removeAttribute('disabled');
+        return this;
+    }
+
     public pause = (): BoardController => {
         this.Board.play = false;
         this.View.$pauseBtn.setAttribute('disabled', 'disabled');
@@ -53,7 +64,18 @@ export default class BoardController {
         return this;
     }
 
-public animation = (): BoardController => {
+    public clickHandler = (event: any): number[] => {
+        const receivedEvent: any = event || window.event;
+        const x: number  = (receivedEvent.offsetY / this.View.itemHeight);
+        const y: number  = (receivedEvent.offsetX / this.View.itemWidth);
+        this.Board.toggleState(Math.floor(x), Math.floor(y));
+        if (!this.Board.play) {
+            this.View.draw(this.Board.cellmatrix);
+        }
+        return [x, y];
+    }
+
+    private animation = (): BoardController => {
 
         (function animationLoop(): void {
             if (!this.Board.play) {
@@ -65,28 +87,6 @@ public animation = (): BoardController => {
         }).bind(this)();
 
         return this;
-    }
-
-    public play = (): any => {
-        if (this.Board.play) {
-            return false;
-        }
-        this.Board.play = true;
-        this.animation();
-        this.View.$playBtn.setAttribute('disabled', 'disabled');
-        this.View.$pauseBtn.removeAttribute('disabled');
-        return this;
-    }
-
-    public clickHandler = (event: any): number[] => {
-        const receivedEvent: any = event || window.event;
-        const x: number  = (receivedEvent.offsetY / this.View.itemHeight);
-        const y: number  = (receivedEvent.offsetX / this.View.itemWidth);
-        this.Board.toggleState(Math.floor(x), Math.floor(y));
-        if (!this.Board.play) {
-            this.View.draw(this.Board.cellmatrix);
-        }
-        return [x, y];
     }
 
     private validateInputSize(position: string, value: number): boolean {

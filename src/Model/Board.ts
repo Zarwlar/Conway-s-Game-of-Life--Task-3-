@@ -22,13 +22,14 @@ export default class Board {
     }
 
     public preset = (preset: number[][]): Board => {
-        preset.forEach((rows: number[], i: number) => {
-            rows.forEach((cols: number, j: number) => {
-                if (this.cellHaveValue(preset, i, j) && this.cellNotUndefined(preset, i , j)) {
-                    this.cellmatrix[i][j] = preset[i][j];
-                }
-        });
-    });
+        this.cols = preset.length;
+        this.rows = preset[0].length;
+        this.cellMatrix = Array(preset.length)
+            .fill(0)
+            .map(() => Array(preset[0].length)
+            .fill(0));
+        this.cellMatrix = preset.map((rows: number[]) => rows.slice());
+        this.nextGen = this.cloneBoard(this.cellmatrix);
         return this;
     }
 
@@ -71,9 +72,9 @@ export default class Board {
 
     public fillResizedBoard = (cols: number, rows: number): number[][] => {
         this.oldCellMatrix = this.cloneBoard(this.cellMatrix);
-        this.cellMatrix = Array(this.cols)
+        this.cellMatrix = Array(cols)
             .fill(0)
-            .map(() => Array(this.rows)
+            .map(() => Array(rows)
             .fill(0));
         this.cellMatrix = this.cellMatrix.map((x: any, i: number): any => {
            return x.map((y: number, j: number) => {
@@ -84,6 +85,7 @@ export default class Board {
                 }
             });
         });
+
         this.nextGen = this.cloneBoard(this.cellMatrix);
         this.oldCellMatrix = [];
         return this.cellmatrix;
