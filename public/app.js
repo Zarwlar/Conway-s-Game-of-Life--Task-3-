@@ -73,36 +73,57 @@
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const Board_1 = __webpack_require__(1);
-const View_1 = __webpack_require__(3);
-class BoardController {
-    constructor() {
-        this.pause = () => {
-            this.Board.play = false;
-            this.View.$pauseBtn.setAttribute('disabled', 'disabled');
-            this.View.$playBtn.removeAttribute('disabled');
-            return this;
+var Board_1 = __webpack_require__(1);
+var View_1 = __webpack_require__(3);
+var BoardController = (function () {
+    function BoardController() {
+        var _this = this;
+        this.play = function () {
+            if (_this.Board.play) {
+                return false;
+            }
+            _this.Board.play = true;
+            _this.animation();
+            _this.View.$playBtn.setAttribute('disabled', 'disabled');
+            _this.View.$pauseBtn.removeAttribute('disabled');
+            return _this;
         };
-        this.resizeWidth = (event) => {
-            const value = Number(event.currentTarget.value);
-            if (this.validateInputSize('rows', value)) {
-                this.changeCellMatrixSize('rows', value);
+        this.pause = function () {
+            _this.Board.play = false;
+            _this.View.$pauseBtn.setAttribute('disabled', 'disabled');
+            _this.View.$playBtn.removeAttribute('disabled');
+            return _this;
+        };
+        this.resizeWidth = function (event) {
+            var value = Number(event.currentTarget.value);
+            if (_this.validateInputSize('rows', value)) {
+                _this.changeCellMatrixSize('rows', value);
             }
         };
-        this.resizeHeight = (event) => {
-            const value = Number(event.currentTarget.value);
-            if (this.validateInputSize('cols', value)) {
-                this.changeCellMatrixSize('cols', value);
+        this.resizeHeight = function (event) {
+            var value = Number(event.currentTarget.value);
+            if (_this.validateInputSize('cols', value)) {
+                _this.changeCellMatrixSize('cols', value);
             }
         };
-        this.clear = () => {
-            this.Board.clear();
-            if (!this.Board.play) {
-                this.View.draw(this.Board.cellmatrix);
+        this.clear = function () {
+            _this.Board.clear();
+            if (!_this.Board.play) {
+                _this.View.draw(_this.Board.cellmatrix);
             }
-            return this;
+            return _this;
         };
-        this.animation = () => {
+        this.clickHandler = function (event) {
+            var receivedEvent = event || window.event;
+            var x = (receivedEvent.offsetY / _this.View.itemHeight);
+            var y = (receivedEvent.offsetX / _this.View.itemWidth);
+            _this.Board.toggleState(Math.floor(x), Math.floor(y));
+            if (!_this.Board.play) {
+                _this.View.draw(_this.Board.cellmatrix);
+            }
+            return [x, y];
+        };
+        this.animation = function () {
             (function animationLoop() {
                 if (!this.Board.play) {
                     return;
@@ -110,28 +131,8 @@ class BoardController {
                 this.Board.checkBoard();
                 this.View.draw(this.Board.cellmatrix);
                 window.setTimeout(animationLoop.bind(this), 400);
-            }).bind(this)();
-            return this;
-        };
-        this.play = () => {
-            if (this.Board.play) {
-                return false;
-            }
-            this.Board.play = true;
-            this.animation();
-            this.View.$playBtn.setAttribute('disabled', 'disabled');
-            this.View.$pauseBtn.removeAttribute('disabled');
-            return this;
-        };
-        this.clickHandler = (event) => {
-            const receivedEvent = event || window.event;
-            const x = (receivedEvent.offsetY / this.View.itemHeight);
-            const y = (receivedEvent.offsetX / this.View.itemWidth);
-            this.Board.toggleState(Math.floor(x), Math.floor(y));
-            if (!this.Board.play) {
-                this.View.draw(this.Board.cellmatrix);
-            }
-            return [x, y];
+            }).bind(_this)();
+            return _this;
         };
         this.Board = new Board_1.default();
         this.View = new View_1.default();
@@ -147,18 +148,19 @@ class BoardController {
         this.View.addEvent(this.View.$heightInput, 'blur', this.resizeHeight);
         this.View.draw(this.Board.cellmatrix);
     }
-    validateInputSize(position, value) {
+    BoardController.prototype.validateInputSize = function (position, value) {
         if (this.Board[position] === value || value < 4 || isNaN(value)) {
             return false;
         }
         return true;
-    }
-    changeCellMatrixSize(position, value) {
+    };
+    BoardController.prototype.changeCellMatrixSize = function (position, value) {
         this.Board[position] = Math.ceil(value);
         this.Board.fillResizedBoard(this.Board.cols, this.Board.rows);
         this.View.draw(this.Board.cellmatrix);
-    }
-}
+    };
+    return BoardController;
+}());
 exports.default = BoardController;
 
 
@@ -169,98 +171,100 @@ exports.default = BoardController;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-class Board {
-    constructor() {
+var Board = (function () {
+    function Board() {
+        var _this = this;
         this.cellMatrix = [];
         this.nextGen = [];
         this.oldCellMatrix = [];
-        this.preset = (preset) => {
-            preset.forEach((rows, i) => {
-                rows.forEach((cols, j) => {
-                    if (this.cellHaveValue(preset, i, j) && this.cellNotUndefined(preset, i, j)) {
-                        this.cellmatrix[i][j] = preset[i][j];
-                    }
-                });
-            });
-            return this;
+        this.preset = function (preset) {
+            _this.cols = preset.length;
+            _this.rows = preset[0].length;
+            _this.cellMatrix = Array(preset.length)
+                .fill(0)
+                .map(function () { return Array(preset[0].length)
+                .fill(0); });
+            _this.cellMatrix = preset.map(function (rows) { return rows.slice(); });
+            _this.nextGen = _this.cloneBoard(_this.cellmatrix);
+            return _this;
         };
-        this.getCellState = (x, y) => {
-            return this.cellmatrix[x][y];
+        this.getCellState = function (x, y) {
+            return _this.cellmatrix[x][y];
         };
-        this.toggleState = (x, y) => {
-            if (this.cellmatrix[x][y] === 0) {
-                this.cellmatrix[x][y] = 1;
+        this.toggleState = function (x, y) {
+            if (_this.cellmatrix[x][y] === 0) {
+                _this.cellmatrix[x][y] = 1;
             }
             else {
-                this.cellmatrix[x][y] = 0;
+                _this.cellmatrix[x][y] = 0;
             }
-            return this.cellmatrix[x][y];
+            return _this.cellmatrix[x][y];
         };
-        this.getNextGen = () => {
-            this.cellmatrix.forEach((rows, i) => {
-                rows.forEach((cols, j) => {
-                    this.nextGen[i][j] = this.checkState(i, j);
+        this.getNextGen = function () {
+            _this.cellmatrix.forEach(function (rows, i) {
+                rows.forEach(function (cols, j) {
+                    _this.nextGen[i][j] = _this.checkState(i, j);
                 });
             });
-            return this.nextGen;
+            return _this.nextGen;
         };
-        this.checkBoard = () => {
-            this.getNextGen();
-            this.copyBoard(this.nextGen, this.cellmatrix);
-            return this;
+        this.updateBoard = function () {
+            _this.getNextGen();
+            _this.copyBoard(_this.nextGen, _this.cellmatrix);
+            return _this;
         };
-        this.clear = () => {
-            this.cellmatrix.forEach((rows, i) => {
-                rows.forEach((cols, j) => {
-                    this.cellmatrix[i][j] = 0;
+        this.clear = function () {
+            _this.cellmatrix.forEach(function (rows, i) {
+                rows.forEach(function (cols, j) {
+                    _this.cellmatrix[i][j] = 0;
                 });
             });
-            return this.cellmatrix;
+            return _this.cellmatrix;
         };
-        this.fillResizedBoard = (cols, rows) => {
-            this.oldCellMatrix = this.cloneBoard(this.cellMatrix);
-            this.cellMatrix = Array(this.cols)
+        this.fillResizedBoard = function (cols, rows) {
+            _this.oldCellMatrix = _this.cloneBoard(_this.cellMatrix);
+            _this.cellMatrix = Array(cols)
                 .fill(0)
-                .map(() => Array(this.rows)
-                .fill(0));
-            this.cellMatrix = this.cellMatrix.map((x, i) => {
-                return x.map((y, j) => {
+                .map(function () { return Array(rows)
+                .fill(0); });
+            _this.cellMatrix = _this.cellMatrix.map(function (x, i) {
+                return x.map(function (y, j) {
                     try {
-                        return this.oldCellMatrix[i][j] || 0;
+                        return _this.oldCellMatrix[i][j] || 0;
                     }
                     catch (e) {
                         return 0;
                     }
                 });
             });
-            this.nextGen = this.cloneBoard(this.cellMatrix);
-            this.oldCellMatrix = [];
-            return this.cellmatrix;
+            _this.nextGen = _this.cloneBoard(_this.cellMatrix);
+            _this.oldCellMatrix = [];
+            return _this.cellmatrix;
         };
-        this.fillBoard = () => {
-            this.cellMatrix = Array(this.cols)
+        this.fillBoard = function () {
+            _this.cellMatrix = Array(_this.cols)
                 .fill(0)
-                .map(() => Array(this.rows)
-                .fill(0));
-            this.nextGen = this.cloneBoard(this.cellMatrix);
+                .map(function () { return Array(_this.rows)
+                .fill(0); });
+            _this.nextGen = _this.cloneBoard(_this.cellMatrix);
         };
-        this.setCellState = (x, y, state) => {
+        this.setCellState = function (x, y, state) {
             if (state !== 0 && state !== 1) {
                 state = 0;
             }
-            this.cellmatrix[x][y] = state;
-            return this;
+            _this.cellmatrix[x][y] = state;
+            return _this;
         };
-        this.checkState = (x, y) => {
-            const topRow = (y === 0) ? this.rows - 1 : y - 1;
-            const bottomRow = (y === this.rows - 1) ? 0 : y + 1;
-            const leftCol = (x === 0) ? this.cols - 1 : x - 1;
-            const rightCol = (x === this.cols - 1) ? 0 : x + 1;
-            let sum = 0;
-            let state = this.cellmatrix[x][y];
-            sum = this.cellmatrix[leftCol][topRow] + this.cellmatrix[x][topRow] + this.cellmatrix[rightCol][topRow] +
-                this.cellmatrix[leftCol][y] + this.cellmatrix[rightCol][y] +
-                this.cellmatrix[leftCol][bottomRow] + this.cellmatrix[x][bottomRow] + this.cellmatrix[rightCol][bottomRow];
+        this.checkState = function (x, y) {
+            var topRow = (y === 0) ? _this.rows - 1 : y - 1;
+            var bottomRow = (y === _this.rows - 1) ? 0 : y + 1;
+            var leftCol = (x === 0) ? _this.cols - 1 : x - 1;
+            var rightCol = (x === _this.cols - 1) ? 0 : x + 1;
+            var sum = 0;
+            var state = _this.cellmatrix[x][y];
+            sum = _this.cellmatrix[leftCol][topRow] + _this.cellmatrix[x][topRow] + _this.cellmatrix[rightCol][topRow] +
+                _this.cellmatrix[leftCol][y] + _this.cellmatrix[rightCol][y] +
+                _this.cellmatrix[leftCol][bottomRow] + _this.cellmatrix[x][bottomRow] + _this.cellmatrix[rightCol][bottomRow];
             if (state === 0 && sum === 3) {
                 state = 1;
             }
@@ -269,28 +273,28 @@ class Board {
             }
             return state;
         };
-        this.cellHaveValue = (preset, i, j) => {
-            if ((this.cellmatrix[i][j] === 0 || this.cellmatrix[i][j] === 1)) {
+        this.cellHaveValue = function (preset, i, j) {
+            if ((_this.cellmatrix[i][j] === 0 || _this.cellmatrix[i][j] === 1)) {
                 return true;
             }
             return false;
         };
-        this.cellNotUndefined = (preset, i, j) => {
-            if ((preset[i][j] !== undefined) && (this.cellmatrix[i][j] !== undefined)) {
+        this.cellNotUndefined = function (preset, i, j) {
+            if ((preset[i][j] !== undefined) && (_this.cellmatrix[i][j] !== undefined)) {
                 return true;
             }
             return false;
         };
-        this.copyBoard = (nextGen, board) => {
-            this.cellmatrix.forEach((rows, i) => {
-                rows.forEach((cols, j) => {
+        this.copyBoard = function (nextGen, board) {
+            _this.cellmatrix.forEach(function (rows, i) {
+                rows.forEach(function (cols, j) {
                     board[i][j] = nextGen[i][j];
                 });
             });
             return nextGen;
         };
-        this.cloneBoard = (board) => {
-            return board.map((arr) => {
+        this.cloneBoard = function (board) {
+            return board.map(function (arr) {
                 return arr.slice();
             });
         };
@@ -299,10 +303,15 @@ class Board {
         this.play = false;
         this.fillBoard();
     }
-    get cellmatrix() {
-        return this.cellMatrix;
-    }
-}
+    Object.defineProperty(Board.prototype, "cellmatrix", {
+        get: function () {
+            return this.cellMatrix;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return Board;
+}());
 exports.default = Board;
 
 
@@ -318,25 +327,25 @@ if (!Array.prototype.fill) {
             if (this == null) {
                 throw new TypeError('this is null or not defined');
             }
-            const O = Object(this);
+            var O = Object(this);
             // Steps 3-5.
             // tslint:disable-next-line:no-bitwise
-            const len = O.length >>> 0;
+            var len = O.length >>> 0;
             // Steps 6-7.
-            const start = arguments[1];
+            var start = arguments[1];
             // tslint:disable-next-line:no-bitwise
-            const relativeStart = start >> 0;
+            var relativeStart = start >> 0;
             // Step 8.
-            let k = relativeStart < 0 ?
+            var k = relativeStart < 0 ?
                 Math.max(len + relativeStart, 0) :
                 Math.min(relativeStart, len);
             // Steps 9-10.
-            const end = arguments[2];
-            const relativeEnd = end === undefined ?
+            var end = arguments[2];
+            var relativeEnd = end === undefined ?
                 // tslint:disable-next-line:no-bitwise
                 len : end >> 0;
             // Step 11.
-            const final = relativeEnd < 0 ?
+            var final = relativeEnd < 0 ?
                 Math.max(len + relativeEnd, 0) :
                 Math.min(relativeEnd, len);
             // Step 12.
@@ -358,23 +367,24 @@ if (!Array.prototype.fill) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const $ = __webpack_require__(6);
-class View {
-    constructor() {
-        this.draw = (cellmatrix) => {
-            this.itemWidth = this.width / cellmatrix[0].length;
-            this.itemHeight = this.height / cellmatrix.length;
-            this.ctx.clearRect(0, 0, this.width, this.height);
-            cellmatrix.forEach((rows, i) => {
-                rows.forEach((cols, j) => {
+var $ = __webpack_require__(6);
+var View = (function () {
+    function View() {
+        var _this = this;
+        this.draw = function (cellmatrix) {
+            _this.itemWidth = _this.width / cellmatrix[0].length;
+            _this.itemHeight = _this.height / cellmatrix.length;
+            _this.ctx.clearRect(0, 0, _this.width, _this.height);
+            cellmatrix.forEach(function (rows, i) {
+                rows.forEach(function (cols, j) {
                     if (!!cellmatrix[i][j]) {
-                        this.ctx.fillRect(j * this.itemWidth, i * this.itemHeight, this.itemWidth, this.itemHeight);
+                        _this.ctx.fillRect(j * _this.itemWidth, i * _this.itemHeight, _this.itemWidth, _this.itemHeight);
                     }
                 });
             });
-            return this;
+            return _this;
         };
-        this.addEvent = (elem, type, handler) => {
+        this.addEvent = function (elem, type, handler) {
             elem.addEventListener(type, handler, false);
         };
         this.$playBtn = $('.js-game__button-play').get(0);
@@ -384,7 +394,8 @@ class View {
         this.$heightInput = $('.js-game__input-height').get(0);
         this.$canvasBoard = $('.js-game__board').get(0);
     }
-}
+    return View;
+}());
 exports.default = View;
 
 
@@ -10670,15 +10681,16 @@ return jQuery;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const BoardController_1 = __webpack_require__(0);
-class App {
-    constructor() {
-        const controller = new BoardController_1.default();
+var BoardController_1 = __webpack_require__(0);
+var App = (function () {
+    function App() {
+        var controller = new BoardController_1.default();
     }
-}
+    return App;
+}());
 exports.default = App;
-window.onload = () => {
-    const app = new App();
+window.onload = function () {
+    var app = new App();
 };
 
 

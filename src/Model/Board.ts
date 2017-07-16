@@ -55,7 +55,7 @@ export default class Board {
         return this.nextGen;
     }
 
-    public checkBoard = (): Board => {
+    public updateBoard = (): Board => {
         this.getNextGen();
         this.copyBoard(this.nextGen, this.cellmatrix);
         return this;

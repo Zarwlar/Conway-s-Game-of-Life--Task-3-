@@ -19,8 +19,8 @@ export default class BoardController {
         this.View.addEvent(this.View.$pauseBtn, 'click', this.pause);
         this.View.addEvent(this.View.$clearBtn, 'click', this.clear);
         this.View.addEvent(this.View.$canvasBoard, 'click', this.clickHandler);
-        this.View.addEvent(this.View.$widthInput, 'blur', this.resizeWidth);
-        this.View.addEvent(this.View.$heightInput, 'blur', this.resizeHeight);
+        this.View.addEvent(this.View.$widthInput, 'blur', this.changeWidth);
+        this.View.addEvent(this.View.$heightInput, 'blur', this.changeHeight);
         this.View.draw(this.Board.cellmatrix);
 }
 
@@ -42,14 +42,20 @@ export default class BoardController {
         return this;
     }
 
-    public resizeWidth = (event: Event): void => {
+    public changeCellMatrixSize(position: string, value: number): void {
+        this.Board[position] = Math.ceil(value);
+        this.Board.fillResizedBoard(this.Board.cols, this.Board.rows);
+        this.View.draw(this.Board.cellmatrix);
+    }
+
+    public changeWidth = (event: Event): void => {
         const value: number = Number((event.currentTarget as HTMLInputElement).value);
         if (this.validateInputSize('rows', value)) {
             this.changeCellMatrixSize('rows', value);
         }
     }
 
-    public resizeHeight= (event: Event): void => {
+    public changeHeight= (event: Event): void => {
         const value: number  = Number((event.currentTarget as HTMLInputElement).value);
         if (this.validateInputSize('cols', value)) {
             this.changeCellMatrixSize('cols', value);
@@ -81,7 +87,7 @@ export default class BoardController {
             if (!this.Board.play) {
                 return;
             }
-            this.Board.checkBoard();
+            this.Board.updateBoard();
             this.View.draw(this.Board.cellmatrix);
             window.setTimeout(animationLoop.bind(this), 400);
         }).bind(this)();
@@ -94,12 +100,6 @@ export default class BoardController {
             return false;
         }
         return true;
-    }
-
-    private changeCellMatrixSize(position: string, value: number): void {
-        this.Board[position] = Math.ceil(value);
-        this.Board.fillResizedBoard(this.Board.cols, this.Board.rows);
-        this.View.draw(this.Board.cellmatrix);
     }
 
 }
